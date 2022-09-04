@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
     "@types/node": "^18.7.14",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
@@ -25,6 +26,9 @@
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-styled-components": "^2.0.7",
     "postcss": "^8.4.16",
+    "prettier": "^2.7.1",
+    "prettier-plugin-organize-imports": "^3.1.1",
+    "prettier-plugin-tailwindcss": "^0.1.13",
     "sass": "^1.54.7",
     "tailwindcss": "^3.1.8",
     "twin.macro": "^2.8.2",
