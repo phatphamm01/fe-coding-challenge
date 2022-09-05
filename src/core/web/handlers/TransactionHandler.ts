@@ -1,7 +1,9 @@
 import throttle from 'lodash/throttle';
 
 import { IObjectWebBuilder } from '../types/core';
-import { Handler } from './Handler';
+import { Handler, IObject } from './Handler';
+
+import { cloneMap, mapToObject, objectToMap } from '@/assets/utils/map';
 
 export type TransactionType =
   | 'add'
@@ -20,7 +22,7 @@ class TransactionHandler {
   private handler: Handler;
   private redos: TransactionEvent[];
   private undos: TransactionEvent[];
-  private state: IObjectWebBuilder[] = [];
+  private state: IObject;
 
   constructor(handler: Handler) {
     this.handler = handler;
@@ -30,18 +32,17 @@ class TransactionHandler {
   public initialize = () => {
     this.redos = [];
     this.undos = [];
-    this.state = [];
+    this.state = new Map();
   };
 
-  public setState = (state: IObjectWebBuilder[]) => {
-    const newState = [...state];
-    this.state = newState;
+  public setState = (state: IObject) => {
+    this.state = cloneMap(state);
   };
 
   public save = (type: TransactionType) => {
     try {
       if (this.state) {
-        const json = JSON.stringify(this.state);
+        const json = JSON.stringify(mapToObject(this.state));
 
         this.redos = [];
         this.undos.push({
@@ -50,7 +51,7 @@ class TransactionHandler {
         });
       }
 
-      this.setState(this.handler.getObjects());
+      this.setState(this.handler.getMapObjects());
     } catch (error) {
       console.error(error);
     }
@@ -63,7 +64,7 @@ class TransactionHandler {
 
     this.redos.push({
       type: 'redo',
-      json: JSON.stringify(this.state)
+      json: JSON.stringify(mapToObject(this.state))
     });
 
     this.handler.eventHandler.emit('undo', undo);
@@ -77,7 +78,7 @@ class TransactionHandler {
 
     this.undos.push({
       type: 'undo',
-      json: JSON.stringify(this.state)
+      json: JSON.stringify(mapToObject(this.state))
     });
 
     this.handler.eventHandler.emit('redo', redo);
@@ -86,8 +87,9 @@ class TransactionHandler {
 
   public replay = (transaction: TransactionEvent) => {
     const objects = JSON.parse(transaction.json) as IObjectWebBuilder[];
-    this.handler.setObjects(objects);
-    this.setState(objects);
+    const objectMap = objectToMap(objects);
+    this.handler.setObjects(objectMap);
+    this.setState(objectMap);
   };
 }
 

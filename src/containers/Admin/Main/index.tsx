@@ -42,7 +42,7 @@ const Main: React.FC<IChildrenProp> = () => {
   return (
     <MainContainer>
       <Container id={handler?.id}>
-        {handler?.getObjects().map((value) => {
+        {handler?.getObjectsAsArray().map((value) => {
           const Comp = WebBuilderObject[value.type].create({
             data: value
           });

@@ -4,13 +4,15 @@ import EventHandler from './EventHandler';
 import TransactionHandler from './TransactionHandler';
 
 import { saveTemplateAsFile } from '@/assets/utils/download';
+import { objectToMap } from '@/assets/utils/map';
 
+export type IObject = Map<string, IObjectWebBuilder>;
 export interface HandlerOption {
   id: string;
   container?: HTMLDivElement;
   editable?: boolean;
   keyEvent?: KeyEvent;
-  objects?: IObjectWebBuilder[];
+  objects?: IObject;
   [key: string]: any;
 }
 
@@ -52,7 +54,7 @@ export class Handler implements HandlerOptions {
   public transactionHandler: TransactionHandler;
   public eventHandler: EventHandler;
 
-  public objects: IObjectWebBuilder[];
+  public objects: IObject;
   public target?: IObjectWebBuilder;
 
   constructor(options: HandlerOptions) {
@@ -69,7 +71,7 @@ export class Handler implements HandlerOptions {
     this.id = options.id;
     this.container = options.container;
     this.editable = !!options?.editable;
-    this.objects = [];
+    this.objects = new Map();
     this.setKeyEvent(options.keyEvent || defaults.keyEvent);
   };
 
@@ -87,15 +89,19 @@ export class Handler implements HandlerOptions {
     this.eventHandler = new EventHandler(this);
   };
 
-  public getObjects = (): IObjectWebBuilder[] => {
+  public getMapObjects = (): IObject => {
     return this.objects;
   };
 
-  public setObjects = (obj: IObjectWebBuilder[]): void => {
+  public getObjectsAsArray = (): IObjectWebBuilder[] => {
+    const objAgain = Object.fromEntries(this.getMapObjects());
+    return Object.keys(objAgain).map((value) => objAgain[value]) || [];
+  };
+
+  public setObjects = (obj: IObject): void => {
     this.objects = obj;
 
     this.eventHandler.emit('changed', obj);
-    this.transactionHandler.save('changed');
   };
 
   public getContainer = () => {
@@ -107,21 +113,20 @@ export class Handler implements HandlerOptions {
   };
 
   public add = (obj: IObjectWebBuilder) => {
-    this.objects.push(obj);
+    this.objects.set(obj.id, obj);
     this.eventHandler.emit('add', obj);
     this.transactionHandler.save('add');
   };
 
   public remove = (obj: IObjectWebBuilder) => {
-    this.objects.filter((value) => value.id !== obj.id);
+    this.removeById(obj.id);
+
     this.eventHandler.emit('remove', obj);
     this.transactionHandler.save('remove');
   };
 
   public removeById = (id: string) => {
-    this.objects.filter((value) => value.id !== id);
-    this.eventHandler.emit('remove', id);
-    this.transactionHandler.save('remove');
+    this.objects.delete(id);
   };
 
   public setKeyEvent = (keyEvent: KeyEvent) => {
@@ -129,7 +134,13 @@ export class Handler implements HandlerOptions {
   };
 
   public exportJson = () => {
-    saveTemplateAsFile('data.json', this.getObjects());
+    saveTemplateAsFile('data.json', this.getMapObjects());
+  };
+
+  public importJson = (source: IObjectWebBuilder[]) => {
+    const map = objectToMap(source);
+
+    this.setObjects(map);
   };
 }
 

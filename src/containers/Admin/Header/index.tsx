@@ -56,9 +56,7 @@ const Header: React.FC<IChildrenProp> = () => {
         name: 'Import',
         onClick: async () => {
           const obj = (await getJsonToFile()) as IObjectWebBuilder[];
-          console.log(obj);
-
-          handler?.setObjects(obj);
+          handler?.importJson(obj);
         }
       },
       {
