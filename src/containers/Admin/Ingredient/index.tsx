@@ -2,12 +2,17 @@ import { useId } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
+import { useHandler } from '../Provider';
+
 import { IChildrenProp } from '@/types/common';
 
 import useDraggable from '@/hooks/useDraggable';
 
+import defaultObject from '@/core/web/objects/base';
+import { ITypeWebBuilder } from '@/core/web/types';
+
 const IngredientContainer = styled.div`
-  ${tw`h-full w-48 border-r`}
+  ${tw`h-[inherit] w-48 border-r overflow-y-auto`}
 `;
 
 const IngredientList = styled.ul`
@@ -32,7 +37,7 @@ const IngredientEl = {
 
 type IIngredient = {
   name: string;
-  type: string;
+  type: ITypeWebBuilder;
 };
 
 interface IIngredientItem {
@@ -40,9 +45,21 @@ interface IIngredientItem {
 }
 
 const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
+  const handler = useHandler();
+
   const { target } = useDraggable<HTMLDivElement>({
+    onStart(event, target, setPosition) {
+      target.style.pointerEvents = 'none';
+    },
     onEnd(event, target, positionInit, setPosition) {
       (target.style as any) = '';
+    },
+    onDropAtElement(event, target, element) {
+      const container = handler?.getContainer();
+      if (!container) return;
+      if (!container.contains(element)) return;
+
+      handler?.add(defaultObject[item.type]());
     }
   });
 

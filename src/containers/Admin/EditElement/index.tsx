@@ -1,9 +1,10 @@
-import { IChildrenProp } from 'src/types/common';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
+import { IChildrenProp } from '@/types/common';
+
 const EditElementContainer = styled.div`
-  ${tw`h-[20vh] w-full`}
+  ${tw`h-[30vh]`}
 `;
 
 const EditElement: React.FC<IChildrenProp> = () => {
