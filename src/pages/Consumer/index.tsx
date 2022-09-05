@@ -1,13 +1,15 @@
-import { IChildrenProp } from 'src/types/common';
-import styled from 'styled-components';
-import tw from 'twin.macro';
+import { IChildrenProp } from '@/types/common';
 
-const ConsumerContainer = styled.div`
-  ${tw``}
-`;
+import ConsumerPage from '@/containers/Consumer';
+
+import HandlerProvider from '@/provider/HandlerProvider';
 
 const Consumer: React.FC<IChildrenProp> = () => {
-  return <ConsumerContainer>Consumer</ConsumerContainer>;
+  return (
+    <HandlerProvider>
+      <ConsumerPage />
+    </HandlerProvider>
+  );
 };
 
 export default Consumer;

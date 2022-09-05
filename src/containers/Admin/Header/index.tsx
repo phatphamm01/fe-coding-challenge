@@ -1,14 +1,15 @@
 import { useId, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-
-import { useHandler } from '../Provider';
 
 import { IChildrenProp } from '@/types/common';
 
 import { getJsonToFile } from '@/assets/utils/download';
 
 import { IObjectWebBuilder } from '@/core/web/types';
+
+import { useHandler } from '@/provider/HandlerProvider';
 
 const HeaderContainer = styled.div`
   ${tw`w-full h-full border-b`}
@@ -19,20 +20,24 @@ const HeaderBox = styled.div`
 `;
 
 const ActionList = styled.ul`
-  ${tw`flex gap-8 bg-red-500 px-8 py-2 rounded text-white font-medium cursor-pointer`}
+  ${tw`flex bg-red-500 rounded text-white font-medium cursor-pointer`}
 `;
 
 const ActionItem = styled.li`
-  ${tw``}
+  ${tw`px-6 py-2`}
 `;
 
 const Header: React.FC<IChildrenProp> = () => {
   const handler = useHandler();
+  const navigate = useNavigate();
+
   const actionList = useMemo(
     () => [
       {
         name: 'Save',
-        onClick: () => {}
+        onClick: () => {
+          handler?.storageHandler.save();
+        }
       },
       {
         name: 'Undo',
@@ -61,7 +66,9 @@ const Header: React.FC<IChildrenProp> = () => {
       },
       {
         name: 'View',
-        onClick: () => {}
+        onClick: () => {
+          navigate('./consumer');
+        }
       }
     ],
     [handler]

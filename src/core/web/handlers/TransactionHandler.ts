@@ -90,6 +90,7 @@ class TransactionHandler {
     const objectMap = objectToMap(objects);
     this.handler.setObjects(objectMap);
     this.setState(objectMap);
+    this.handler.clear();
   };
 }
 

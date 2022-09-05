@@ -1,6 +1,7 @@
 import { defaults } from '../constants';
 import { IObjectWebBuilder, KeyEvent } from '../types/core';
 import EventHandler from './EventHandler';
+import StorageHandler from './StorageHandler';
 import TransactionHandler from './TransactionHandler';
 
 import { saveTemplateAsFile } from '@/assets/utils/download';
@@ -53,6 +54,7 @@ export class Handler implements HandlerOptions {
 
   public transactionHandler: TransactionHandler;
   public eventHandler: EventHandler;
+  public storageHandler: StorageHandler;
 
   public objects: IObject;
   public target?: IObjectWebBuilder;
@@ -87,6 +89,7 @@ export class Handler implements HandlerOptions {
   public initHandler = () => {
     this.transactionHandler = new TransactionHandler(this);
     this.eventHandler = new EventHandler(this);
+    this.storageHandler = new StorageHandler(this);
   };
 
   public getMapObjects = (): IObject => {
@@ -136,13 +139,14 @@ export class Handler implements HandlerOptions {
   };
 
   public exportJson = () => {
-    saveTemplateAsFile('data.json', this.getMapObjects());
+    saveTemplateAsFile('data.json', this.getObjectsAsArray());
   };
 
   public importJson = (source: IObjectWebBuilder[]) => {
     const map = objectToMap(source);
 
     this.setObjects(map);
+    this.transactionHandler.save('changed');
   };
 
   public modifyObject = (
@@ -156,6 +160,11 @@ export class Handler implements HandlerOptions {
     this.objects.set(obj.id, newObj);
 
     this.eventHandler.emit('changed', newObj);
+  };
+
+  public clear = () => {
+    this.target = undefined;
+    this.eventHandler.emit('selected', null);
   };
 }
 

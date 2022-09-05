@@ -2,8 +2,6 @@ import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
-import { useHandler } from '../Provider';
-
 import { IChildrenProp } from '@/types/common';
 
 import Input from '@/design/Input';
@@ -15,6 +13,8 @@ import {
   IObjectParagraph,
   ITypeWebBuilder
 } from '@/core/web/types';
+
+import { useHandler } from '@/provider/HandlerProvider';
 
 const EditElementContainer = styled.div`
   ${tw`h-[30vh]`}

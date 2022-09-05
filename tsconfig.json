@@ -32,6 +32,8 @@
       "@/hooks/*": ["src/hooks/*"],
       "@/pages": ["src/pages"],
       "@/pages/*": ["src/pages/*"],
+      "@/provider": ["src/provider"],
+      "@/provider/*": ["src/provider/*"],
       "@/routes": ["src/routes"],
       "@/routes/*": ["src/routes/*"],
       "@/types": ["src/types"],

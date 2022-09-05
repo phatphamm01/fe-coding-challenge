@@ -1,6 +1,4 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import tw from 'twin.macro';
 
 import { IChildrenProp } from '@/types/common';
 
@@ -8,14 +6,10 @@ import { randomId } from '@/assets/common';
 
 import { Handler } from '@/core/web/handlers';
 
-const ProviderContainer = styled.div`
-  ${tw``}
-`;
-
 const HandlerContext = createContext<Handler | null>(null);
 export const useHandler = () => useContext(HandlerContext);
 
-const Provider: React.FC<IChildrenProp> = ({ children }) => {
+const HandlerProvider: React.FC<IChildrenProp> = ({ children }) => {
   const [handler, setHandler] = useState<Handler | null>(null);
 
   useEffect(() => {
@@ -28,6 +22,14 @@ const Provider: React.FC<IChildrenProp> = ({ children }) => {
     window.handler = handlerInit;
   }, []);
 
+  useEffect(() => {
+    if (!handler) return;
+    const source = handler.storageHandler.getAsMap();
+    if (!source) return;
+
+    handler?.setObjects(source);
+  }, [handler]);
+
   return (
     <HandlerContext.Provider value={handler}>
       {children}
@@ -35,4 +37,4 @@ const Provider: React.FC<IChildrenProp> = ({ children }) => {
   );
 };
 
-export default Provider;
+export default HandlerProvider;

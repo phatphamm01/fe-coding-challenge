@@ -5,7 +5,6 @@ import EditElement from './EditElement';
 import Header from './Header';
 import Ingredient from './Ingredient';
 import Main from './Main';
-import Provider from './Provider';
 
 const AdminContainer = styled.div`
   ${tw``}
@@ -21,21 +20,19 @@ const MainBox = styled.div`
 
 const AdminPage: React.FC = () => {
   return (
-    <Provider>
-      <AdminContainer className="no-selected">
-        <HeaderBox>
-          <Header />
-        </HeaderBox>
+    <AdminContainer className="no-selected">
+      <HeaderBox>
+        <Header />
+      </HeaderBox>
 
-        <MainBox>
-          <Ingredient />
-          <div tw="h-[inherit] w-full flex flex-col">
-            <Main />
-            <EditElement />
-          </div>
-        </MainBox>
-      </AdminContainer>
-    </Provider>
+      <MainBox>
+        <Ingredient />
+        <div tw="h-[inherit] w-full flex flex-col">
+          <Main />
+          <EditElement />
+        </div>
+      </MainBox>
+    </AdminContainer>
   );
 };
 

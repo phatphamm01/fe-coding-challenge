@@ -1,8 +1,6 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-
-import { useHandler } from '../Provider';
 
 import { IChildrenProp } from '@/types/common';
 
@@ -10,6 +8,9 @@ import useDraggable from '@/hooks/useDraggable';
 
 import defaultObject from '@/core/web/objects/base';
 import { ITypeWebBuilder } from '@/core/web/types';
+
+import { useDraggingHandler } from '@/provider/DraggingProvider';
+import { useHandler } from '@/provider/HandlerProvider';
 
 const IngredientContainer = styled.div`
   ${tw`h-[inherit] w-48 border-r overflow-y-auto`}
@@ -46,16 +47,29 @@ interface IIngredientItem {
 
 const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
   const handler = useHandler();
+  const draggingHandler = useDraggingHandler();
+  const [isMove, setIsMove] = useState<boolean>(false);
 
   const { target } = useDraggable<HTMLDivElement>({
+    delay: 300,
     onStart(event, target, setPosition) {
       target.style.pointerEvents = 'none';
+      draggingHandler.dispatch({ type: 'CHANGE_NAME', data: item.name });
+
+      setIsMove(true);
     },
     onEnd(event, target, positionInit, setPosition) {
+      setPosition(positionInit);
+      target.style.transition = 'transform 300ms ease-in';
+    },
+    onDelayEnd(event, target, positionInit, setPosition) {
       (target.style as any) = '';
+      draggingHandler.dispatch({ type: 'CHANGE_NAME', data: '' });
+      setIsMove(false);
     },
     onDropAtElement(event, target, element) {
       const container = handler?.getContainer();
+
       if (!container) return;
       if (!container.contains(element)) return;
 
@@ -69,6 +83,12 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
         <IngredientEl.Image />
         <IngredientEl.Title>{item.name}</IngredientEl.Title>
       </IngredientEl.Drag>
+      {isMove && (
+        <IngredientEl.Drag>
+          <IngredientEl.Image />
+          <IngredientEl.Title>{item.name}</IngredientEl.Title>
+        </IngredientEl.Drag>
+      )}
     </IngredientEl.Box>
   );
 };

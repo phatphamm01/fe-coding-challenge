@@ -14,7 +14,8 @@ module.exports = {
     '@/hooks',
     '@/services',
     '@/common',
-    '@/core'
+    '@/core',
+    '@/provider'
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true

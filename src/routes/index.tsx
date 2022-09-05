@@ -8,7 +8,7 @@ const RouteBase = () => {
     <BrowserRouter>
       <Routes>
         <Route index element={<Admin />} />
-        <Route path="consumer" element={<Consumer />} />
+        <Route path="/consumer" element={<Consumer />} />
         <Route path="/*" element={<Admin />} />
       </Routes>
     </BrowserRouter>
