@@ -13,10 +13,11 @@ const ButtonContainer = styled.button<{ css: string }>`
 `;
 
 const Button: React.FC<IButton> = ({
-  data: { id, style, title, type, ...rest }
+  data: { id, style = {}, title, type },
+  ...rest
 }) => {
   return (
-    <ButtonContainer css={genCss(style)} {...rest} id={id}>
+    <ButtonContainer id={id} css={genCss(style)} {...rest}>
       {title}
     </ButtonContainer>
   );

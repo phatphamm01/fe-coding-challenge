@@ -12,9 +12,12 @@ const ParagraphContainer = styled.p<{ css: string }>`
   ${({ css }) => css}
 `;
 
-const Paragraph: React.FC<IParagraph> = ({ data: { id, style, title } }) => {
+const Paragraph: React.FC<IParagraph> = ({
+  data: { id, style = {}, title },
+  ...rest
+}) => {
   return (
-    <ParagraphContainer id={id} css={genCss(style)}>
+    <ParagraphContainer id={id} css={genCss(style)} {...rest}>
       {title}
     </ParagraphContainer>
   );

@@ -14,7 +14,7 @@ const MainContainer = styled.div`
   ${tw`border-b flex-grow overflow-y-auto`}
 `;
 const Container = styled.div`
-  ${tw`h-full w-full overflow-auto`}
+  ${tw`h-full w-full flex flex-col items-center overflow-auto`}
 `;
 
 const Main: React.FC<IChildrenProp> = () => {
@@ -47,7 +47,13 @@ const Main: React.FC<IChildrenProp> = () => {
             data: value
           });
 
-          return <Comp key={value.id} data={value} />;
+          return (
+            <Comp
+              onClick={() => handler?.onSelected?.(value)}
+              key={value.id}
+              data={value}
+            />
+          );
         })}
       </Container>
     </MainContainer>

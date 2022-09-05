@@ -108,8 +108,10 @@ export class Handler implements HandlerOptions {
     return document.getElementById(this.id);
   };
 
-  public selected = (obj: IObjectWebBuilder) => {
+  public onSelected = (obj: IObjectWebBuilder) => {
     this.target = obj;
+
+    this.eventHandler.emit('selected', obj);
   };
 
   public add = (obj: IObjectWebBuilder) => {
@@ -141,6 +143,19 @@ export class Handler implements HandlerOptions {
     const map = objectToMap(source);
 
     this.setObjects(map);
+  };
+
+  public modifyObject = (
+    obj: IObjectWebBuilder,
+    { key, value }: { key: keyof IObjectWebBuilder; value: string }
+  ) => {
+    let newObj = this.objects.get(obj.id);
+    if (!newObj) return;
+
+    newObj = { ...newObj, [key]: value };
+    this.objects.set(obj.id, newObj);
+
+    this.eventHandler.emit('changed', newObj);
   };
 }
 

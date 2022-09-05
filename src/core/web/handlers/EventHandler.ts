@@ -6,7 +6,8 @@ export type EventType =
   | 'changed'
   | 'paste'
   | 'redo'
-  | 'undo';
+  | 'undo'
+  | 'selected';
 
 class EventHandler {
   handler: Handler;
@@ -21,19 +22,19 @@ class EventHandler {
     this.subscribes = new Map();
   };
 
-  on(name: EventType, func: Function) {
+  on(name: EventType, func: ({ ...arg }) => void) {
     if (!this.subscribes.has(name)) this.subscribes.set(name, []);
     this.subscribes.get(name).push(func);
     return () => this.unsubscribeOf(name, func);
   }
 
-  onMulti(names: EventType[], func: Function) {
+  onMulti(names: EventType[], func: ({ ...arg }) => void) {
     names.forEach((value) => {
       this.on(value, func);
     });
   }
 
-  once(name: EventType, func: Function) {
+  once(name: EventType, func: ({ ...arg }) => void) {
     const unsubscribe = this.on(name, function () {
       func.apply(undefined, arguments);
       unsubscribe();
@@ -44,13 +45,13 @@ class EventHandler {
   emit(name: EventType, arg: any) {
     const refunds: any[] = [];
     if (this.subscribes.has(name))
-      this.subscribes.get(name).forEach((func: Function) => {
+      this.subscribes.get(name).forEach((func: ({ ...arg }) => void) => {
         if (func) refunds.push(func(arg));
       });
     return refunds;
   }
 
-  unsubscribeOf(name: EventType, func: Function) {
+  unsubscribeOf(name: EventType, func: ({ ...arg }) => void) {
     if (!this.subscribes.has(name)) {
       return;
     }
@@ -58,12 +59,14 @@ class EventHandler {
     if (func)
       this.subscribes.set(
         name,
-        this.subscribes.get(name).filter((f: Function) => f !== func)
+        this.subscribes
+          .get(name)
+          .filter((f: ({ ...arg }) => void) => f !== func)
       );
     else this.subscribes.delete(name);
   }
 
-  unsubscribeOfMulti(names: EventType[], func: Function) {
+  unsubscribeOfMulti(names: EventType[], func: ({ ...arg }) => void) {
     names.forEach((value) => {
       this.unsubscribeOf(value, func);
     });

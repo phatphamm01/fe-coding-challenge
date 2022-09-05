@@ -1,9 +1,16 @@
+import React, { DetailedHTMLProps } from 'react';
+
 import { ITypeWebBuilder } from '../types';
 import Button from './Button';
 import Paragraph from './Paragraph';
 
 export interface ObjectSchema {
-  create: (...option: any) => React.FC<{ data: any }>;
+  create: (
+    ...option: any
+  ) => React.FC<
+    | DetailedHTMLProps<React.AllHTMLAttributes<HTMLElement>, HTMLElement>
+    | { data: any }
+  >;
 }
 
 export type WebBuilderObjectSchema = Record<ITypeWebBuilder, ObjectSchema>;
@@ -13,10 +20,10 @@ export const createWebBuilderObject = (objectSchema: WebBuilderObjectSchema) =>
 
 const WebBuilderObject: WebBuilderObjectSchema = {
   button: {
-    create: () => Button
+    create: () => Button as any
   },
   paragraph: {
-    create: () => Paragraph
+    create: () => Paragraph as any
   }
 };
 
