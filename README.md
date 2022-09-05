@@ -23,9 +23,9 @@
 - [x] Edit Element
   - [x] Basic information
   - [ ] Style
-- [] List page
-- [] Grid layout
-- [] Flex layout
+- [ ] List page
+- [ ] Grid layout
+- [ ] Flex layout
 
 ## How To Use
 
