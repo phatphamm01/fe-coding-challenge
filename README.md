@@ -11,7 +11,7 @@
 <p align="center">
     <span>Infomation</span>
     <br>
-  <a href="https://github.com/thedaviddias/Front-End-Performance-Checklist#---------front-end-performance-checklist-">🎮 Link Demo</a> • <a href="https://phatphamm-cv.vercel.app/">💎 Link CV</a>
+  <a href="https://fe-coding-challenge.vercel.app/">🎮 Link Demo</a> • <a href="https://phatphamm-cv.vercel.app/">💎 Link CV</a> • <a href="https://www.facebook.com/rinongusi/"> 💛 Link Facebook</a>
 </p>
 </p>
 
