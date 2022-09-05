@@ -1,11 +1,18 @@
-import { useId } from 'react';
+import { useId, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
 import { IChildrenProp } from '@/types/common';
 
+import { getJsonToFile } from '@/assets/utils/download';
+
+import { IObjectWebBuilder } from '@/core/web/types';
+
+import { useHandler } from '@/provider/HandlerProvider';
+
 const HeaderContainer = styled.div`
-  ${tw`w-full h-14 border-b`}
+  ${tw`w-full h-full border-b`}
 `;
 
 const HeaderBox = styled.div`
@@ -13,20 +20,68 @@ const HeaderBox = styled.div`
 `;
 
 const ActionList = styled.ul`
-  ${tw`flex gap-8 bg-red-500 px-8 py-2 rounded text-white font-medium cursor-pointer`}
+  ${tw`flex bg-red-500 rounded text-white font-medium cursor-pointer`}
 `;
 
 const ActionItem = styled.li`
-  ${tw``}
+  ${tw`px-6 py-2`}
 `;
 
 const Header: React.FC<IChildrenProp> = () => {
+  const handler = useHandler();
+  const navigate = useNavigate();
+
+  const actionList = useMemo(
+    () => [
+      {
+        name: 'Save',
+        onClick: () => {
+          handler?.storageHandler.save();
+        }
+      },
+      {
+        name: 'Undo',
+        onClick: () => {
+          handler?.transactionHandler.undo();
+        }
+      },
+      {
+        name: 'Redo',
+        onClick: () => {
+          handler?.transactionHandler.redo();
+        }
+      },
+      {
+        name: 'Export',
+        onClick: () => {
+          handler?.exportJson();
+        }
+      },
+      {
+        name: 'Import',
+        onClick: async () => {
+          const obj = (await getJsonToFile()) as IObjectWebBuilder[];
+          handler?.importJson(obj);
+        }
+      },
+      {
+        name: 'View',
+        onClick: () => {
+          navigate('./consumer');
+        }
+      }
+    ],
+    [handler]
+  );
+
   return (
     <HeaderContainer>
       <HeaderBox>
         <ActionList>
           {actionList.map((value) => (
-            <ActionItem key={useId()}>{value.name}</ActionItem>
+            <ActionItem onClick={value.onClick} key={useId()}>
+              {value.name}
+            </ActionItem>
           ))}
         </ActionList>
       </HeaderBox>
@@ -35,24 +90,3 @@ const Header: React.FC<IChildrenProp> = () => {
 };
 
 export default Header;
-
-const actionList = [
-  {
-    name: 'Save'
-  },
-  {
-    name: 'Undo'
-  },
-  {
-    name: 'Redo'
-  },
-  {
-    name: 'Export'
-  },
-  {
-    name: 'Import'
-  },
-  {
-    name: 'View'
-  }
-];

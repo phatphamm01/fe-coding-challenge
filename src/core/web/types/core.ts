@@ -1,13 +1,15 @@
-import { CSSProperties } from 'react';
+import { ITypeCss } from '@/assets/utils/css';
 
 export type ITypeWebBuilder = 'button' | 'paragraph';
 
 export interface IObjectWebBuilder {
   id: string;
   type: ITypeWebBuilder;
-  zIndex: string;
+  zIndex?: string;
 
-  style: CSSProperties;
+  style?: ITypeCss;
+
+  [key: string]: any;
 }
 
 export interface KeyEvent {
