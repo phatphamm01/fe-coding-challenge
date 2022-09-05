@@ -34,14 +34,6 @@ class EventHandler {
     });
   }
 
-  once(name: EventType, func: ({ ...arg }) => void) {
-    const unsubscribe = this.on(name, function () {
-      func.apply(undefined, arguments);
-      unsubscribe();
-    });
-    return unsubscribe;
-  }
-
   emit(name: EventType, arg: any) {
     const refunds: any[] = [];
     if (this.subscribes.has(name))
