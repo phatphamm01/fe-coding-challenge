@@ -4,17 +4,25 @@ import { IChildrenProp } from '@/types/common';
 
 import { randomId } from '@/assets/common';
 
-import { Handler } from '@/core/web/handlers';
+import { Handler, HandlerOptions } from '@/core/web/handlers';
 
 const HandlerContext = createContext<Handler | null>(null);
 export const useHandler = () => useContext(HandlerContext);
 
-const HandlerProvider: React.FC<IChildrenProp> = ({ children }) => {
+interface IHandlerProvider {
+  options?: Partial<HandlerOptions>;
+}
+
+const HandlerProvider: React.FC<IChildrenProp & IHandlerProvider> = ({
+  children,
+  options
+}) => {
   const [handler, setHandler] = useState<Handler | null>(null);
 
   useEffect(() => {
     const handlerInit = new Handler({
-      id: randomId()
+      id: randomId(),
+      ...options
     });
     setHandler(handlerInit);
 

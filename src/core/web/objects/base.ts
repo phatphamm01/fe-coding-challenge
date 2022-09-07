@@ -28,8 +28,9 @@ export const buttonDefaultObject: () => IObjectButton = () => ({
 export const paragraphDefaultObject: () => IObjectParagraph = () => ({
   id: randomId(),
   style: { padding: { default: '8px 12px' } },
-  title: { content: 'Paragraph' },
-  type: 'paragraph'
+  title: { content: 'Paragraph', fontSize: '14px' },
+  type: 'paragraph',
+  display: 'block'
 });
 
 export const imageDefaultObject: () => IObjectImage = () => ({
@@ -47,7 +48,7 @@ export const listDefaultObject: () => IObjectList = () => ({
   id: randomId(),
   style: {},
   data: ['item1', 'item2'],
-  title: { content: 'Danh sách' },
+  title: { content: 'Danh sách', fontSize: '14px' },
   type: 'list',
   listStyle: 'none'
 });

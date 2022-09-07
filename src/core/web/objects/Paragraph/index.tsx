@@ -4,6 +4,8 @@ import { ITypeCss, genCss } from '@/assets/utils/css';
 
 import { IObjectParagraph } from '@/core/web/types';
 
+import { useHandler } from '@/provider/HandlerProvider';
+
 interface IParagraph {
   data: IObjectParagraph;
 }
@@ -13,9 +15,11 @@ const ParagraphContainer = styled.p<{ css: string }>`
 `;
 
 const Paragraph: React.FC<IParagraph> = ({
-  data: { id, style = {}, title },
+  data: { id, style = {}, title, display, link },
   ...rest
 }) => {
+  const handler = useHandler();
+
   const styleTitle: ITypeCss = {
     fontWeight: {
       default: title.isBold ? 'bold' : ''
@@ -25,6 +29,9 @@ const Paragraph: React.FC<IParagraph> = ({
     },
     textDecoration: {
       default: title.isUnderlined ? 'underline' : ''
+    },
+    display: {
+      default: display
     }
   };
   return (
@@ -33,7 +40,7 @@ const Paragraph: React.FC<IParagraph> = ({
       css={genCss({ ...style, ...styleTitle })}
       {...rest}
     >
-      {title.content}
+      {handler?.editable ? title.content : <a href={link}>{title.content}</a>}
     </ParagraphContainer>
   );
 };

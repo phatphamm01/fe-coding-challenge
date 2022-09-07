@@ -51,7 +51,7 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
   const [isMove, setIsMove] = useState<boolean>(false);
 
   const { target } = useDraggable<HTMLDivElement>({
-    delay: 300,
+    delay: 150,
     onStart(event, target, setPosition) {
       target.style.pointerEvents = 'none';
       draggingHandler.dispatch({ type: 'CHANGE_NAME', data: item.name });
@@ -62,7 +62,7 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
       console.log({ positionInit });
 
       setPosition(positionInit);
-      target.style.transition = 'transform 300ms ease-in';
+      target.style.transition = 'transform 150ms ease-in';
     },
     onDelayEnd(event, target, positionInit, setPosition) {
       (target.style as any) = '';

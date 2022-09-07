@@ -19,7 +19,7 @@ const MainContainer = styled.div`
   ${tw`relative border-b flex-grow overflow-y-auto`}
 `;
 const Container = styled.div`
-  ${tw`h-full w-full flex flex-col items-center overflow-auto p-2`}
+  ${tw`h-full w-full overflow-auto p-2`}
 `;
 const Instances = styled.div`
   ${tw``}

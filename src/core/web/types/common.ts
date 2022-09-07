@@ -3,7 +3,12 @@ export interface IStyle {
   isItalic?: boolean;
   isUnderlined?: boolean;
 }
+export interface IFont {
+  fontFamily?: string;
+  fontSize: string;
+}
+
 export type IString = {
   content: string;
-  font?: string;
-} & IStyle;
+} & IStyle &
+  IFont;

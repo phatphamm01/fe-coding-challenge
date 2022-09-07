@@ -168,6 +168,9 @@ class Draggable {
 
     // handle event dropAtElement
     let elemBelow = document.elementFromPoint(e.pageX, e.pageY);
+    let elemsBelow = document.elementsFromPoint(e.pageX, e.pageY);
+    console.log(elemsBelow);
+
     this.opts.onDropAtElement?.(e, element, elemBelow);
 
     // handle event delay end
