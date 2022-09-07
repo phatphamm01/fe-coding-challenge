@@ -22,11 +22,11 @@ import {
 import { useHandler } from '@/provider/HandlerProvider';
 
 const EditElementContainer = styled.div`
-  ${tw`h-[30vh]`}
+  ${tw`h-[30vh] overflow-auto`}
 `;
 
 const EditElementBox = styled.div`
-  ${tw`px-6 pt-4`}
+  ${tw`px-6 py-4`}
 `;
 
 const EditElement: React.FC<IChildrenProp> = () => {

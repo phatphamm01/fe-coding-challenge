@@ -30,6 +30,12 @@ class StorageHandler {
       'webBuilder',
       JSON.stringify(this.handler.getObjectsAsArray())
     );
+
+    this.handler.notifyHandler.notify('success', 'Save Success');
+  };
+
+  public reset = () => {
+    localStorage.setItem('webBuilder', '');
   };
 }
 

@@ -11,7 +11,7 @@ module.exports = {
     '@/icons|@/assets|@/design|@/layouts|@/component',
     '@/container|@/page',
     '@/redux',
-    '@/hooks',
+    '@/hooks|@/HOC',
     '@/services',
     '@/common',
     '@/core',

@@ -1,5 +1,6 @@
 import { useId, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
@@ -33,6 +34,12 @@ const Header: React.FC<IChildrenProp> = () => {
 
   const actionList = useMemo(
     () => [
+      {
+        name: 'Clear',
+        onClick: () => {
+          handler?.reset();
+        }
+      },
       {
         name: 'Save',
         onClick: () => {

@@ -115,5 +115,13 @@ const ingredientList: IIngredient[] = [
   {
     name: 'Button',
     type: 'button'
+  },
+  {
+    name: 'Image',
+    type: 'image'
+  },
+  {
+    name: 'List',
+    type: 'list'
   }
 ];

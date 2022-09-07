@@ -1,6 +1,6 @@
 import { ITypeCss } from '@/assets/utils/css';
 
-export type ITypeWebBuilder = 'button' | 'paragraph';
+export type ITypeWebBuilder = 'button' | 'paragraph' | 'image' | 'list';
 
 export interface IObjectWebBuilder {
   id: string;

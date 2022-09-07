@@ -1,4 +1,10 @@
-import { IObjectButton, IObjectParagraph, ITypeWebBuilder } from '../types';
+import {
+  IObjectButton,
+  IObjectImage,
+  IObjectList,
+  IObjectParagraph,
+  ITypeWebBuilder
+} from '../types';
 
 import { randomId } from '@/assets/common';
 
@@ -15,19 +21,42 @@ export const buttonDefaultObject: () => IObjectButton = () => ({
     }
   },
   title: 'Button',
-  type: 'button'
+  type: 'button',
+  message: 'Thông báo'
 });
 
 export const paragraphDefaultObject: () => IObjectParagraph = () => ({
   id: randomId(),
   style: { padding: { default: '8px 12px' } },
-  title: 'Paragraph',
+  title: { content: 'Paragraph' },
   type: 'paragraph'
+});
+
+export const imageDefaultObject: () => IObjectImage = () => ({
+  id: randomId(),
+  style: {},
+  name: 'Image',
+  src: 'https://via.placeholder.com/150',
+  type: 'image',
+  objectFit: 'cover',
+  height: '',
+  width: ''
+});
+
+export const listDefaultObject: () => IObjectList = () => ({
+  id: randomId(),
+  style: {},
+  data: ['item1', 'item2'],
+  title: { content: 'Danh sách' },
+  type: 'list',
+  listStyle: 'none'
 });
 
 const defaultObject: Record<ITypeWebBuilder, any> = {
   button: buttonDefaultObject,
-  paragraph: paragraphDefaultObject
+  paragraph: paragraphDefaultObject,
+  image: imageDefaultObject,
+  list: listDefaultObject
 };
 
 export default defaultObject;

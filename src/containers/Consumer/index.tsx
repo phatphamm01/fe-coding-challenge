@@ -27,13 +27,7 @@ const ConsumerPage: React.FC<IChildrenProp> = () => {
             data: value
           });
 
-          return (
-            <Comp
-              onClick={() => handler?.onSelected?.(value)}
-              key={value.id}
-              data={value}
-            />
-          );
+          return <Comp key={value.id} data={value} />;
         })}
       </Container>
     </ConsumerPageContainer>

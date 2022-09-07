@@ -1,7 +1,10 @@
 import { IChildrenProp } from '@/types/common';
 
-import Input from '@/design/Input';
+import MultiInput from '@/design/MultiInput';
+import Select from '@/design/Select';
+import TextInputStyle from '@/design/TextInputStyle';
 
+import { Property } from '@/core/web/constants/css';
 import { IObjectList } from '@/core/web/types';
 
 import { useHandler } from '@/provider/HandlerProvider';
@@ -14,21 +17,41 @@ const List: React.FC<IChildrenProp & IList> = ({ value }) => {
   const handler = useHandler();
 
   return (
-    <div key={value.id} className="grid gap-6 mb-6 grid-cols-2">
-      <Input
-        title="Name"
-        name="name"
-        value={value.name}
+    <div className="grid gap-6">
+      <div key={value.id} className="grid gap-6 grid-cols-2">
+        <div className="flex gap-2 items-end">
+          <TextInputStyle
+            title="Title"
+            name="title"
+            value={value.title}
+            onChange={(val) => {
+              handler?.modifyObject(value, { key: 'title', value: val });
+            }}
+          />
+        </div>
+
+        <Select
+          title="List Style"
+          data={Property.ListStyle.map((value) => ({
+            title: value,
+            value: value
+          }))}
+          name="listStyle"
+          value={{ title: value.listStyle, value: value.listStyle }}
+          onChange={(val) => {
+            handler?.modifyObject(value, {
+              key: 'listStyle',
+              value: val.value
+            });
+          }}
+        />
+      </div>
+      <MultiInput
+        title="List"
+        name="data"
+        values={value.data}
         onChange={(val) => {
-          handler?.modifyObject(value, { key: 'name', value: val });
-        }}
-      />
-      <Input
-        title="Link"
-        name="src"
-        value={value.src}
-        onChange={(val) => {
-          handler?.modifyObject(value, { key: 'src', value: val });
+          handler?.modifyObject(value, { key: 'data', value: val });
         }}
       />
     </div>

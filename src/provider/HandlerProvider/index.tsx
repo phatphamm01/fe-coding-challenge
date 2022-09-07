@@ -24,10 +24,10 @@ const HandlerProvider: React.FC<IChildrenProp> = ({ children }) => {
 
   useEffect(() => {
     if (!handler) return;
-    const source = handler.storageHandler.getAsMap();
+    const source = handler.storageHandler.get();
     if (!source) return;
 
-    handler?.setObjects(source);
+    handler?.importDataStorage(source);
   }, [handler]);
 
   return (

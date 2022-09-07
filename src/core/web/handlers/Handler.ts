@@ -1,6 +1,7 @@
 import { defaults } from '../constants';
 import { IObjectWebBuilder, KeyEvent } from '../types/core';
 import EventHandler from './EventHandler';
+import NotifyHandler from './NotifyHandler';
 import StorageHandler from './StorageHandler';
 import TransactionHandler from './TransactionHandler';
 
@@ -55,6 +56,7 @@ export class Handler implements HandlerOptions {
   public transactionHandler: TransactionHandler;
   public eventHandler: EventHandler;
   public storageHandler: StorageHandler;
+  public notifyHandler: NotifyHandler;
 
   public objects: IObject;
   public target?: IObjectWebBuilder;
@@ -90,6 +92,7 @@ export class Handler implements HandlerOptions {
     this.transactionHandler = new TransactionHandler(this);
     this.eventHandler = new EventHandler(this);
     this.storageHandler = new StorageHandler(this);
+    this.notifyHandler = new NotifyHandler(this);
   };
 
   public getMapObjects = (): IObject => {
@@ -117,6 +120,10 @@ export class Handler implements HandlerOptions {
     this.eventHandler.emit('selected', obj);
   };
 
+  public findObjectById = (id: string) => {
+    return this.getMapObjects().get(id);
+  };
+
   public add = (obj: IObjectWebBuilder) => {
     this.objects.set(obj.id, obj);
     this.eventHandler.emit('add', obj);
@@ -140,6 +147,7 @@ export class Handler implements HandlerOptions {
 
   public exportJson = () => {
     saveTemplateAsFile('data.json', this.getObjectsAsArray());
+    this.notifyHandler.notify('success', 'Export Success');
   };
 
   public importJson = (source: IObjectWebBuilder[]) => {
@@ -147,11 +155,19 @@ export class Handler implements HandlerOptions {
 
     this.setObjects(map);
     this.transactionHandler.save('changed');
+    this.notifyHandler.notify('success', 'Import Success');
   };
 
-  public modifyObject = (
+  public importDataStorage = (source: IObjectWebBuilder[]) => {
+    const map = objectToMap(source);
+
+    this.setObjects(map);
+    this.transactionHandler.save('changed');
+  };
+
+  public modifyObject = <T = string>(
     obj: IObjectWebBuilder,
-    { key, value }: { key: keyof IObjectWebBuilder; value: string }
+    { key, value }: { key: keyof IObjectWebBuilder; value: T }
   ) => {
     let newObj = this.objects.get(obj.id);
     if (!newObj) return;
@@ -165,6 +181,15 @@ export class Handler implements HandlerOptions {
   public clear = () => {
     this.target = undefined;
     this.eventHandler.emit('selected', null);
+  };
+
+  public reset = () => {
+    this.objects = new Map();
+    this.storageHandler.reset();
+
+    this.eventHandler.emit('changed', null);
+    this.transactionHandler.save('changed');
+    this.notifyHandler.notify('success', 'Clear Success');
   };
 }
 

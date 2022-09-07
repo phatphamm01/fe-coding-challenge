@@ -3,7 +3,7 @@ import tw from 'twin.macro';
 
 import { IChildrenProp } from '@/types/common';
 
-import Input from '@/design/Input';
+import TextInputStyle from '@/design/TextInputStyle';
 
 import { IObjectParagraph } from '@/core/web/types';
 
@@ -21,7 +21,7 @@ const Paragraph: React.FC<IChildrenProp & IParagraph> = ({ value }) => {
   const handler = useHandler();
   return (
     <div key={value.id} className="grid gap-6 mb-6 grid-cols-2">
-      <Input
+      <TextInputStyle
         title="Title"
         name="title"
         value={value.title}

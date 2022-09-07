@@ -7,7 +7,7 @@ import Dragging from './Dragging';
 
 import { IChildrenProp } from '@/types/common';
 
-import PositionMouse from '@/design/PositionMouse';
+import PositionMouse from '@/containers/Admin/Main/PositionMouse';
 
 import { useRerender } from '@/hooks/useRerender';
 
@@ -19,7 +19,7 @@ const MainContainer = styled.div`
   ${tw`relative border-b flex-grow overflow-y-auto`}
 `;
 const Container = styled.div`
-  ${tw`h-full w-full flex flex-col items-center overflow-auto`}
+  ${tw`h-full w-full flex flex-col items-center overflow-auto p-2`}
 `;
 const Instances = styled.div`
   ${tw``}
@@ -31,7 +31,7 @@ const Main: React.FC<IChildrenProp> = () => {
 
   useEffect(() => {
     handler?.eventHandler.onMulti(
-      ['add', 'remove', 'changed', 'redo', 'undo', 'paste'],
+      ['add', 'remove', 'changed', 'redo', 'undo', 'paste', 'selected'],
       () => {
         forceUpdate();
       }
@@ -39,7 +39,7 @@ const Main: React.FC<IChildrenProp> = () => {
 
     return () => {
       handler?.eventHandler.unsubscribeOfMulti(
-        ['add', 'remove', 'changed', 'redo', 'undo', 'paste'],
+        ['add', 'remove', 'changed', 'redo', 'undo', 'paste', 'selected'],
         () => {
           forceUpdate();
         }
@@ -49,7 +49,7 @@ const Main: React.FC<IChildrenProp> = () => {
 
   return (
     <MainContainer>
-      <div tw="absolute space-y-2 left-4 top-4 w-[50vh]">
+      <div tw="absolute space-y-2 right-4 bottom-4 w-[40vw] pointer-events-none z-0">
         <PositionMouse />
         <Dragging />
         <Instances>
@@ -66,6 +66,9 @@ const Main: React.FC<IChildrenProp> = () => {
 
           return (
             <Comp
+              style={{
+                outline: handler.target?.id === value.id ? '1px solid blue' : ''
+              }}
               onClick={() => handler?.onSelected?.(value)}
               key={value.id}
               data={value}

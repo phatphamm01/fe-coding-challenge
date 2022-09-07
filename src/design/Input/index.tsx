@@ -1,11 +1,16 @@
-import { ChangeEvent, HTMLInputTypeAttribute, useState } from 'react';
+import {
+  ChangeEvent,
+  HTMLInputTypeAttribute,
+  useEffect,
+  useState
+} from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
 import { IChildrenProp } from '@/types/common';
 
 const InputContainer = styled.div`
-  ${tw``}
+  ${tw`w-full`}
 `;
 
 const Label = styled.label`
@@ -18,7 +23,7 @@ const InputEl = styled.input`
 
 interface IInput {
   name: string;
-  title: string;
+  title?: string;
   value: string;
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
@@ -39,6 +44,10 @@ const Input: React.FC<IChildrenProp & IInput> = ({
 }) => {
   const [val, setValue] = useState(value);
 
+  useEffect(() => {
+    setValue(value);
+  }, [value]);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
@@ -48,7 +57,7 @@ const Input: React.FC<IChildrenProp & IInput> = ({
 
   return (
     <InputContainer>
-      <Label htmlFor={name}>{title}</Label>
+      {title && <Label htmlFor={name}>{title}</Label>}
       <InputEl
         type={type}
         id={name}
