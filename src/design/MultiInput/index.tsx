@@ -41,8 +41,6 @@ const MultiInput: React.FC<IChildrenProp & IMultiInput> = ({
   const [data, setData] = useState(objectToMap(values));
 
   useEffect(() => {
-    console.log(data);
-
     onChange && onChange(Array.from(data.values()));
   }, [data]);
 
@@ -62,7 +60,6 @@ const MultiInput: React.FC<IChildrenProp & IMultiInput> = ({
     });
 
     clone.set(id, '');
-    console.log(clone);
 
     setData(cloneMap(clone));
   };

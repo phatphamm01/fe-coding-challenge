@@ -24,7 +24,10 @@ class FormulaDefaultScroll extends DistanceFormula {
       -rectTarget.top - (rectParent.y - initY) + initY
     ];
 
-    const shiftPosition: [number, number] = [event.clientX, event.clientY];
+    const shiftPosition: [number, number] = [
+      event.clientX - rectParent.x + rectTarget.left,
+      event.clientY - rectParent.y + rectTarget.top
+    ];
 
     return {
       shiftPosition,
@@ -64,11 +67,9 @@ class FormulaDefaultScroll extends DistanceFormula {
     return [x, y];
   }
 
-  getPosition = (elem: any) => {
+  getPosition = (elem) => {
     var left = 0,
       top = 0;
-
-    if (!elem) return [0, 0];
 
     do {
       left += elem.offsetLeft - elem.scrollLeft;

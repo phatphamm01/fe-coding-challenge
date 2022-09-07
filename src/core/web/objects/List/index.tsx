@@ -48,8 +48,6 @@ const List: React.FC<IList> = ({
     }
   };
 
-  console.log(title.content);
-
   return (
     <ListContainer css={genCss(style)} {...rest}>
       <Title css={genCss(styleTitle)}>{title.content}</Title>

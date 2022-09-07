@@ -41,7 +41,6 @@ const Select = <T extends IValue>({
   onChange
 }: ISelect<T>) => {
   const [val, setValue] = useState<T>(value);
-  console.log({ data });
 
   useEffect(() => {
     setValue(value);

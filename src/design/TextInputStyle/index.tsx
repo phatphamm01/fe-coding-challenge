@@ -41,7 +41,6 @@ const TextInputStyle: React.FC<IChildrenProp & ITextInputStyle> = ({
 }) => {
   const [val, setValue] = useState<IString>(value);
 
-  console.log(val);
   useEffect(() => {
     setValue(value);
   }, [value]);

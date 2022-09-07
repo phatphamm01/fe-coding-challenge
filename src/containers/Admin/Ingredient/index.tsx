@@ -59,6 +59,8 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
       setIsMove(true);
     },
     onEnd(event, target, positionInit, setPosition) {
+      console.log({ positionInit });
+
       setPosition(positionInit);
       target.style.transition = 'transform 300ms ease-in';
     },
