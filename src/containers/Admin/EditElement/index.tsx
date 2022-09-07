@@ -2,14 +2,19 @@ import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
-import { IChildrenProp } from '@/types/common';
+import Button from './Button';
+import Image from './Image';
+import List from './List';
+import Paragraph from './Paragraph';
 
-import Input from '@/design/Input';
+import { IChildrenProp } from '@/types/common';
 
 import { useRerender } from '@/hooks/useRerender';
 
 import {
   IObjectButton,
+  IObjectImage,
+  IObjectList,
   IObjectParagraph,
   ITypeWebBuilder
 } from '@/core/web/types';
@@ -36,31 +41,10 @@ const EditElement: React.FC<IChildrenProp> = () => {
 
   const renderOption: Record<ITypeWebBuilder, any> = useMemo(
     () => ({
-      button: (value: IObjectButton) => (
-        <div key={value.id} className="grid gap-6 mb-6 grid-cols-2">
-          <Input
-            title="Title"
-            name="title"
-            value={value.title}
-            onChange={(val) => {
-              handler?.modifyObject(value, { key: 'title', value: val });
-            }}
-          />
-          <Input title="Alert" name="title" value={value.alert} />
-        </div>
-      ),
-      paragraph: (value: IObjectParagraph) => (
-        <div key={value.id} className="grid gap-6 mb-6 grid-cols-2">
-          <Input
-            title="Title"
-            name="title"
-            value={value.title}
-            onChange={(val) => {
-              handler?.modifyObject(value, { key: 'title', value: val });
-            }}
-          />
-        </div>
-      )
+      button: (value: IObjectButton) => <Button value={value} />,
+      paragraph: (value: IObjectParagraph) => <Paragraph value={value} />,
+      image: (value: IObjectImage) => <Image value={value} />,
+      list: (value: IObjectList) => <List value={value} />
     }),
     [handler]
   );
