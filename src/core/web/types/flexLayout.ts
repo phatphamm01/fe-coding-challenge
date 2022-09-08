@@ -9,8 +9,8 @@ export interface IObjectFlexLayout extends IObjectWebBuilder {
   justifyContent: Property.JustifyContent;
   alignItems: Property.AlignItems;
 
-  padding: Property.Padding;
-  margin: Property.Margin;
+  padding: string;
+  margin: string;
 
   children: string[];
 }

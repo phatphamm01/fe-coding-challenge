@@ -12,6 +12,9 @@ export interface IObjectWebBuilder {
   type: ITypeWebBuilder;
   zIndex?: string;
 
+  margin: string;
+  padding: string;
+
   style?: ITypeCss;
 
   root?: string;

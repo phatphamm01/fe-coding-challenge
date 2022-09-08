@@ -27,9 +27,18 @@ const ItemEl = styled.li`
 `;
 
 const List: React.FC<IList> = ({
-  data: { id, style = {}, title, data = [], listStyle },
+  data: { id, style = {}, title, data = [], listStyle, margin, padding },
   ...rest
 }) => {
+  const styles: ITypeCss = {
+    padding: {
+      default: padding
+    },
+    margin: {
+      default: margin
+    }
+  };
+
   const styleTitle: ITypeCss = {
     fontWeight: {
       default: title.isBold ? 'bold' : ''
@@ -49,7 +58,7 @@ const List: React.FC<IList> = ({
   };
 
   return (
-    <ListContainer css={genCss(style)} {...rest}>
+    <ListContainer id={id} css={genCss({ ...style, ...styles })} {...rest}>
       <Title css={genCss(styleTitle)}>{title.content}</Title>
       <ListEl style={{}} id={id} css={genCss(styleList)}>
         {data.map((value) => (

@@ -35,11 +35,20 @@ const EditElement: React.FC<IChildrenProp> = () => {
   const handler = useHandler();
   const forceUpdate = useRerender();
 
+  const targetEl =
+    handler?.target && document.getElementById(handler?.target.id);
+
   useEffect(() => {
-    handler?.eventHandler.on('selected', (value) => {
+    handler?.eventHandler.onMulti(['selected', 'changed'], () => {
       forceUpdate();
     });
-  }, [handler]);
+
+    return () => {
+      handler?.eventHandler.unsubscribeOfMulti(['selected', 'changed'], () => {
+        forceUpdate();
+      });
+    };
+  });
 
   const renderOption: Record<ITypeWebBuilder, any> = useMemo(
     () => ({
@@ -54,10 +63,12 @@ const EditElement: React.FC<IChildrenProp> = () => {
 
   return (
     <EditElementContainer>
-      <EditElementBox>
-        {handler?.target?.type &&
-          renderOption[handler?.target?.type](handler?.target)}
-      </EditElementBox>
+      {targetEl && (
+        <EditElementBox>
+          {handler?.target?.type &&
+            renderOption[handler?.target?.type](handler?.target)}
+        </EditElementBox>
+      )}
     </EditElementContainer>
   );
 };

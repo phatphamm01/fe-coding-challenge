@@ -135,13 +135,14 @@ export class Handler implements HandlerOptions {
 
   public remove = (obj: IObjectWebBuilder) => {
     this.removeById(obj.id);
-
-    this.eventHandler.emit('remove', obj);
-    this.transactionHandler.save('remove');
   };
 
   public removeById = (id: string) => {
+    this.clear();
     this.objects.delete(id);
+
+    this.eventHandler.emit('remove', id);
+    this.transactionHandler.save('remove');
   };
 
   public setKeyEvent = (keyEvent: KeyEvent) => {
@@ -187,6 +188,7 @@ export class Handler implements HandlerOptions {
   };
 
   public reset = () => {
+    this.clear();
     this.objects = new Map();
     this.storageHandler.reset();
 

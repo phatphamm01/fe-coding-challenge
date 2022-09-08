@@ -1,5 +1,6 @@
 import { IChildrenProp } from '@/types/common';
 
+import Input from '@/design/Input';
 import MultiInput from '@/design/MultiInput';
 import Select from '@/design/Select';
 import TextInputStyle from '@/design/TextInputStyle';
@@ -43,6 +44,24 @@ const List: React.FC<IChildrenProp & IList> = ({ value }) => {
               key: 'listStyle',
               value: val.value
             });
+          }}
+        />
+      </div>
+      <div className="grid gap-6 grid-cols-2">
+        <Input
+          title="Margin"
+          name="margin"
+          value={value.margin || ''}
+          onChange={(val) => {
+            handler?.modifyObject(value, { key: 'margin', value: val });
+          }}
+        />
+        <Input
+          title="Padding"
+          name="padding"
+          value={value.padding || ''}
+          onChange={(val) => {
+            handler?.modifyObject(value, { key: 'padding', value: val });
           }}
         />
       </div>

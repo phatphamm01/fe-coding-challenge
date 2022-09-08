@@ -15,7 +15,7 @@ const ParagraphContainer = styled.p<{ css: string }>`
 `;
 
 const Paragraph: React.FC<IParagraph> = ({
-  data: { id, style = {}, title, display, textAlign, link },
+  data: { id, style = {}, title, display, textAlign, link, margin, padding },
   ...rest
 }) => {
   const handler = useHandler();
@@ -33,6 +33,12 @@ const Paragraph: React.FC<IParagraph> = ({
     textAlign: { default: textAlign },
     display: {
       default: display
+    },
+    padding: {
+      default: padding
+    },
+    margin: {
+      default: margin
     }
   };
   return (

@@ -64,6 +64,24 @@ const Paragraph: React.FC<IChildrenProp & IParagraph> = ({ value }) => {
           }}
         />
       </div>
+      <div className="grid gap-6 grid-cols-2">
+        <Input
+          title="Margin"
+          name="margin"
+          value={value.margin || ''}
+          onChange={(val) => {
+            handler?.modifyObject(value, { key: 'margin', value: val });
+          }}
+        />
+        <Input
+          title="Padding"
+          name="padding"
+          value={value.padding || ''}
+          onChange={(val) => {
+            handler?.modifyObject(value, { key: 'padding', value: val });
+          }}
+        />
+      </div>
       <div className="grid gap-6">
         <Input
           title="Link"

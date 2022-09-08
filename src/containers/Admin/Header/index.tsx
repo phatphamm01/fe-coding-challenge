@@ -1,19 +1,21 @@
-import { useId, useMemo } from 'react';
+import { useEffect, useId, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
 import { IChildrenProp } from '@/types/common';
 
 import { getJsonToFile } from '@/assets/utils/download';
+import CancelIcon from '@/icons/Cancel';
+
+import { useRerender } from '@/hooks/useRerender';
 
 import { IObjectWebBuilder } from '@/core/web/types';
 
 import { useHandler } from '@/provider/HandlerProvider';
 
 const HeaderContainer = styled.div`
-  ${tw`w-full h-full border-b`}
+  ${tw`w-full h-full relative border-b`}
 `;
 
 const HeaderBox = styled.div`
@@ -31,6 +33,25 @@ const ActionItem = styled.li`
 const Header: React.FC<IChildrenProp> = () => {
   const handler = useHandler();
   const navigate = useNavigate();
+
+  const targetEl =
+    handler?.target && document.getElementById(handler?.target.id);
+
+  console.log(targetEl);
+
+  const forceUpdate = useRerender();
+
+  useEffect(() => {
+    handler?.eventHandler.onMulti(['selected', 'changed'], () => {
+      forceUpdate();
+    });
+
+    return () => {
+      handler?.eventHandler.unsubscribeOfMulti(['selected', 'changed'], () => {
+        forceUpdate();
+      });
+    };
+  });
 
   const actionList = useMemo(
     () => [
@@ -81,6 +102,14 @@ const Header: React.FC<IChildrenProp> = () => {
     [handler]
   );
 
+  const handleDelete = () => {
+    if (handler?.target?.id) {
+      {
+        handler?.removeById(handler.target?.id);
+      }
+    }
+  };
+
   return (
     <HeaderContainer>
       <HeaderBox>
@@ -92,6 +121,13 @@ const Header: React.FC<IChildrenProp> = () => {
           ))}
         </ActionList>
       </HeaderBox>
+
+      {targetEl && (
+        <CancelIcon
+          onClick={handleDelete}
+          className="absolute cursor-pointer top-[50%] -translate-y-1/2 right-10 text-red-600 w-6 h-6"
+        />
+      )}
     </HeaderContainer>
   );
 };

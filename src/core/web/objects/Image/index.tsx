@@ -19,7 +19,17 @@ const ImageEl = styled.img<{ css: string }>`
 `;
 
 const Image: React.FC<IImage> = ({
-  data: { id, style = {}, src, name, height, width, objectFit },
+  data: {
+    id,
+    style = {},
+    src,
+    name,
+    height,
+    width,
+    objectFit,
+    margin,
+    padding
+  },
   ...rest
 }) => {
   const cssBox: ITypeCss = {
@@ -28,6 +38,12 @@ const Image: React.FC<IImage> = ({
     },
     width: {
       default: width
+    },
+    padding: {
+      default: padding
+    },
+    margin: {
+      default: margin
     }
   };
 
