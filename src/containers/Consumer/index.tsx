@@ -12,12 +12,11 @@ const ConsumerPageContainer = styled.div`
 `;
 
 const Container = styled.div`
-  ${tw`h-full w-full flex flex-col items-center overflow-auto`}
+  ${tw`h-full w-full overflow-auto`}
 `;
 
 const ConsumerPage: React.FC<IChildrenProp> = () => {
   const handler = useHandler();
-  console.log({ data: handler?.storageHandler?.get() });
 
   return (
     <ConsumerPageContainer>

@@ -1,5 +1,6 @@
 import {
   IObjectButton,
+  IObjectFlexLayout,
   IObjectImage,
   IObjectList,
   IObjectParagraph,
@@ -30,7 +31,8 @@ export const paragraphDefaultObject: () => IObjectParagraph = () => ({
   style: { padding: { default: '8px 12px' } },
   title: { content: 'Paragraph', fontSize: '14px' },
   type: 'paragraph',
-  display: 'block'
+  display: 'block',
+  textAlign: 'start'
 });
 
 export const imageDefaultObject: () => IObjectImage = () => ({
@@ -53,11 +55,26 @@ export const listDefaultObject: () => IObjectList = () => ({
   listStyle: 'none'
 });
 
+export const flexLayoutDefaultObject: () => IObjectFlexLayout = () => ({
+  id: randomId(),
+  style: {},
+  type: 'flexLayout',
+  children: [],
+  width: '100%',
+  height: '200px',
+  alignItems: 'unset',
+  flexDirection: 'unset',
+  justifyContent: 'unset',
+  padding: '4px',
+  margin: '4px'
+});
+
 const defaultObject: Record<ITypeWebBuilder, any> = {
   button: buttonDefaultObject,
   paragraph: paragraphDefaultObject,
   image: imageDefaultObject,
-  list: listDefaultObject
+  list: listDefaultObject,
+  flexLayout: flexLayoutDefaultObject
 };
 
 export default defaultObject;

@@ -1,6 +1,11 @@
 import { ITypeCss } from '@/assets/utils/css';
 
-export type ITypeWebBuilder = 'button' | 'paragraph' | 'image' | 'list';
+export type ITypeWebBuilder =
+  | 'button'
+  | 'paragraph'
+  | 'image'
+  | 'list'
+  | 'flexLayout';
 
 export interface IObjectWebBuilder {
   id: string;
@@ -8,6 +13,8 @@ export interface IObjectWebBuilder {
   zIndex?: string;
 
   style?: ITypeCss;
+
+  root?: string;
 
   [key: string]: any;
 }

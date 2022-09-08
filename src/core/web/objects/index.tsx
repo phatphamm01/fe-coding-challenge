@@ -2,6 +2,7 @@ import React, { DetailedHTMLProps } from 'react';
 
 import { ITypeWebBuilder } from '../types';
 import Button from './Button';
+import FlexLayout from './FlexLayout';
 import Image from './Image';
 import List from './List';
 import Paragraph from './Paragraph';
@@ -32,6 +33,9 @@ const WebBuilderObject: WebBuilderObjectSchema = {
   },
   list: {
     create: () => List as any
+  },
+  flexLayout: {
+    create: () => FlexLayout as any
   }
 };
 

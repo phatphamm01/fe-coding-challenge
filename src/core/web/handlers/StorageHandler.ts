@@ -3,7 +3,7 @@ import { Handler } from './Handler';
 
 import { objectToMap } from '@/assets/utils/map';
 
-class StorageHandler {
+export class StorageHandler {
   handler: Handler;
 
   constructor(handler: Handler) {
@@ -38,5 +38,3 @@ class StorageHandler {
     localStorage.setItem('webBuilder', '');
   };
 }
-
-export default StorageHandler;

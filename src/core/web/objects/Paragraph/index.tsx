@@ -15,7 +15,7 @@ const ParagraphContainer = styled.p<{ css: string }>`
 `;
 
 const Paragraph: React.FC<IParagraph> = ({
-  data: { id, style = {}, title, display, link },
+  data: { id, style = {}, title, display, textAlign, link },
   ...rest
 }) => {
   const handler = useHandler();
@@ -30,6 +30,7 @@ const Paragraph: React.FC<IParagraph> = ({
     textDecoration: {
       default: title.isUnderlined ? 'underline' : ''
     },
+    textAlign: { default: textAlign },
     display: {
       default: display
     }

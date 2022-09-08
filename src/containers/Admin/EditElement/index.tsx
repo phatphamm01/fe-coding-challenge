@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 
 import Button from './Button';
+import FlexLayout from './FlexLayout';
 import Image from './Image';
 import List from './List';
 import Paragraph from './Paragraph';
@@ -13,6 +14,7 @@ import { useRerender } from '@/hooks/useRerender';
 
 import {
   IObjectButton,
+  IObjectFlexLayout,
   IObjectImage,
   IObjectList,
   IObjectParagraph,
@@ -44,7 +46,8 @@ const EditElement: React.FC<IChildrenProp> = () => {
       button: (value: IObjectButton) => <Button value={value} />,
       paragraph: (value: IObjectParagraph) => <Paragraph value={value} />,
       image: (value: IObjectImage) => <Image value={value} />,
-      list: (value: IObjectList) => <List value={value} />
+      list: (value: IObjectList) => <List value={value} />,
+      flexLayout: (value: IObjectFlexLayout) => <FlexLayout value={value} />
     }),
     [handler]
   );

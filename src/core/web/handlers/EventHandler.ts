@@ -9,7 +9,7 @@ export type EventType =
   | 'undo'
   | 'selected';
 
-class EventHandler {
+export class EventHandler {
   handler: Handler;
   subscribes: Map<any, any>;
 
@@ -64,5 +64,3 @@ class EventHandler {
     });
   }
 }
-
-export default EventHandler;

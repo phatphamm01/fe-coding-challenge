@@ -141,7 +141,7 @@ class Draggable {
     this.opts.onMove?.(e, element, this.setTransform);
 
     // handle event target
-    let elemBelow = document.elementFromPoint(e.pageX, e.pageY);
+    let elemBelow = document.elementsFromPoint(e.pageX, e.pageY);
     this.opts.onTarget?.(e, element, elemBelow);
   }
 
@@ -167,9 +167,7 @@ class Draggable {
     this.opts.onEnd?.(e, element, [x, y], this.setTransform);
 
     // handle event dropAtElement
-    let elemBelow = document.elementFromPoint(e.pageX, e.pageY);
-    let elemsBelow = document.elementsFromPoint(e.pageX, e.pageY);
-    console.log(elemsBelow);
+    let elemBelow = document.elementsFromPoint(e.pageX, e.pageY);
 
     this.opts.onDropAtElement?.(e, element, elemBelow);
 

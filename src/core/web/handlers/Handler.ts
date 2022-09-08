@@ -1,9 +1,10 @@
 import { defaults } from '../constants';
 import { IObjectWebBuilder, KeyEvent } from '../types/core';
-import EventHandler from './EventHandler';
-import NotifyHandler from './NotifyHandler';
-import StorageHandler from './StorageHandler';
-import TransactionHandler from './TransactionHandler';
+import { EventHandler } from './EventHandler';
+import { NotifyHandler } from './NotifyHandler';
+import { StorageHandler } from './StorageHandler';
+import { TransactionHandler } from './TransactionHandler';
+import { UtilsHandler } from './UtilsHandler';
 
 import { saveTemplateAsFile } from '@/assets/utils/download';
 import { objectToMap } from '@/assets/utils/map';
@@ -57,6 +58,7 @@ export class Handler implements HandlerOptions {
   public eventHandler: EventHandler;
   public storageHandler: StorageHandler;
   public notifyHandler: NotifyHandler;
+  public utilsHandler: UtilsHandler;
 
   public objects: IObject;
   public target?: IObjectWebBuilder;
@@ -93,6 +95,7 @@ export class Handler implements HandlerOptions {
     this.eventHandler = new EventHandler(this);
     this.storageHandler = new StorageHandler(this);
     this.notifyHandler = new NotifyHandler(this);
+    this.utilsHandler = new UtilsHandler(this);
   };
 
   public getMapObjects = (): IObject => {

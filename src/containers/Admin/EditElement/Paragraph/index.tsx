@@ -21,9 +21,10 @@ interface IParagraph {
 
 const Paragraph: React.FC<IChildrenProp & IParagraph> = ({ value }) => {
   const handler = useHandler();
+
   return (
     <div key={value.id} className="grid gap-6">
-      <div className="grid gap-6 grid-cols-2">
+      <div className="grid gap-6 grid-cols-3">
         <TextInputStyle
           title="Title"
           name="title"
@@ -43,6 +44,21 @@ const Paragraph: React.FC<IChildrenProp & IParagraph> = ({ value }) => {
           onChange={(val) => {
             handler?.modifyObject(value, {
               key: 'display',
+              value: val.value
+            });
+          }}
+        />
+        <Select
+          title="Text Align"
+          data={['start', 'center', 'end'].map((value) => ({
+            title: value,
+            value: value
+          }))}
+          name="textAlign"
+          value={{ title: value.textAlign, value: value.textAlign }}
+          onChange={(val) => {
+            handler?.modifyObject(value, {
+              key: 'textAlign',
               value: val.value
             });
           }}

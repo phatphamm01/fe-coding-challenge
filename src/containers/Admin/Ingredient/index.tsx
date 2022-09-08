@@ -2,12 +2,14 @@ import { useId, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
+import { IIngredient, ingredientList } from './constant';
+
 import { IChildrenProp } from '@/types/common';
 
 import useDraggable from '@/hooks/useDraggable';
 
 import defaultObject from '@/core/web/objects/base';
-import { ITypeWebBuilder } from '@/core/web/types';
+import { IObjectFlexLayout, IObjectWebBuilder } from '@/core/web/types';
 
 import { useDraggingHandler } from '@/provider/DraggingProvider';
 import { useHandler } from '@/provider/HandlerProvider';
@@ -36,11 +38,6 @@ const IngredientEl = {
   `
 };
 
-type IIngredient = {
-  name: string;
-  type: ITypeWebBuilder;
-};
-
 interface IIngredientItem {
   item: IIngredient;
 }
@@ -59,8 +56,6 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
       setIsMove(true);
     },
     onEnd(event, target, positionInit, setPosition) {
-      console.log({ positionInit });
-
       setPosition(positionInit);
       target.style.transition = 'transform 150ms ease-in';
     },
@@ -69,13 +64,41 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
       draggingHandler.dispatch({ type: 'CHANGE_NAME', data: '' });
       setIsMove(false);
     },
-    onDropAtElement(event, target, element) {
+    onDropAtElement(event, target, elements) {
+      const elementsAsHTMLElement = elements as HTMLElement[];
       const container = handler?.getContainer();
 
       if (!container) return;
-      if (!container.contains(element)) return;
 
-      handler?.add(defaultObject[item.type]());
+      const element = elementsAsHTMLElement?.find((value) => {
+        const type = value?.dataset?.type;
+        if (!type) return false;
+        if (type === 'main' || type === 'layout') return true;
+        return false;
+      });
+
+      if (!element) return;
+
+      if (element.dataset.type === 'main') {
+        handler?.add(defaultObject[item.type]());
+      }
+
+      if (element.dataset.type === 'layout') {
+        const object = handler
+          ?.getMapObjects()
+          .get(element.id) as IObjectFlexLayout;
+        if (!object) return;
+
+        const newObject = defaultObject[item.type]() as IObjectWebBuilder;
+        newObject.root = object.id;
+
+        handler?.add(newObject);
+
+        handler?.modifyObject(object, {
+          key: 'children',
+          value: [...object.children, newObject.id]
+        });
+      }
     }
   });
 
@@ -108,22 +131,3 @@ const Ingredient: React.FC<IChildrenProp> = () => {
 };
 
 export default Ingredient;
-
-const ingredientList: IIngredient[] = [
-  {
-    name: 'Paragraph',
-    type: 'paragraph'
-  },
-  {
-    name: 'Button',
-    type: 'button'
-  },
-  {
-    name: 'Image',
-    type: 'image'
-  },
-  {
-    name: 'List',
-    type: 'list'
-  }
-];

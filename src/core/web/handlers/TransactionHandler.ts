@@ -18,7 +18,7 @@ export interface TransactionEvent {
   type: TransactionType;
 }
 
-class TransactionHandler {
+export class TransactionHandler {
   private handler: Handler;
   private redos: TransactionEvent[];
   private undos: TransactionEvent[];
@@ -93,5 +93,3 @@ class TransactionHandler {
     this.handler.clear();
   };
 }
-
-export default TransactionHandler;

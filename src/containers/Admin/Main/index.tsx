@@ -11,8 +11,6 @@ import PositionMouse from '@/containers/Admin/Main/PositionMouse';
 
 import { useRerender } from '@/hooks/useRerender';
 
-import WebBuilderObject from '@/core/web/objects';
-
 import { useHandler } from '@/provider/HandlerProvider';
 
 const MainContainer = styled.div`
@@ -48,7 +46,7 @@ const Main: React.FC<IChildrenProp> = () => {
   }, [handler]);
 
   return (
-    <MainContainer>
+    <MainContainer data-type="main">
       <div tw="absolute space-y-2 right-4 bottom-4 w-[40vw] pointer-events-none z-0">
         <PositionMouse />
         <Dragging />
@@ -59,22 +57,7 @@ const Main: React.FC<IChildrenProp> = () => {
       </div>
 
       <Container id={handler?.id}>
-        {handler?.getObjectsAsArray().map((value) => {
-          const Comp = WebBuilderObject[value.type].create({
-            data: value
-          });
-
-          return (
-            <Comp
-              style={{
-                outline: handler.target?.id === value.id ? '1px solid blue' : ''
-              }}
-              onClick={() => handler?.onSelected?.(value)}
-              key={value.id}
-              data={value}
-            />
-          );
-        })}
+        {handler?.utilsHandler.renderElement(handler?.getObjectsAsArray())}
       </Container>
     </MainContainer>
   );
