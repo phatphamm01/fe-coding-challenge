@@ -1,66 +1,46 @@
 import { Handler } from './Handler';
 
-export type EventType =
-  | 'add'
-  | 'remove'
-  | 'changed'
-  | 'paste'
-  | 'redo'
-  | 'undo'
-  | 'selected';
-
-export class EventHandler {
+class EventHandler {
   handler: Handler;
-  subscribes: Map<any, any>;
+  code: string;
+  panning: boolean;
 
   constructor(handler: Handler) {
     this.handler = handler;
     this.initialize();
   }
 
-  public initialize = () => {
-    this.subscribes = new Map();
+  public initialize() {
+    if (this.handler.editable) {
+      document.addEventListener('keydown', this.keydown, false);
+    } else {
+    }
+  }
+
+  public destroy = () => {
+    if (this.handler.editable) {
+      document.removeEventListener('keydown', this.keydown, false);
+    } else {
+    }
   };
 
-  on(name: EventType, func: ({ ...arg }) => void) {
-    if (!this.subscribes.has(name)) this.subscribes.set(name, []);
-    this.subscribes.get(name).push(func);
-    return () => this.unsubscribeOf(name, func);
-  }
+  public keydown = (e: KeyboardEvent) => {
+    const { keyEvent, editable } = this.handler;
 
-  onMulti(names: EventType[], func: ({ ...arg }) => void) {
-    names.forEach((value) => {
-      this.on(value, func);
-    });
-  }
-
-  emit(name: EventType, arg: any) {
-    const refunds: any[] = [];
-    if (this.subscribes.has(name))
-      this.subscribes.get(name).forEach((func: ({ ...arg }) => void) => {
-        if (func) refunds.push(func(arg));
-      });
-    return refunds;
-  }
-
-  unsubscribeOf(name: EventType, func: ({ ...arg }) => void) {
-    if (!this.subscribes.has(name)) {
+    if (editable) {
+      if (this.handler.shortcutHandler.isDelete(e)) {
+        this.handler.remove();
+      } else if (this.handler.shortcutHandler.isCtrlZ(e)) {
+        e.preventDefault();
+        this.handler.transactionHandler.undo();
+      } else if (this.handler.shortcutHandler.isCtrlY(e)) {
+        e.preventDefault();
+        this.handler.transactionHandler.redo();
+      }
       return;
     }
-
-    if (func)
-      this.subscribes.set(
-        name,
-        this.subscribes
-          .get(name)
-          .filter((f: ({ ...arg }) => void) => f !== func)
-      );
-    else this.subscribes.delete(name);
-  }
-
-  unsubscribeOfMulti(names: EventType[], func: ({ ...arg }) => void) {
-    names.forEach((value) => {
-      this.unsubscribeOf(value, func);
-    });
-  }
+    return;
+  };
 }
+
+export default EventHandler;

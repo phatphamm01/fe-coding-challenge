@@ -67,7 +67,7 @@ export class TransactionHandler {
       json: JSON.stringify(mapToObject(this.state))
     });
 
-    this.handler.eventHandler.emit('undo', undo);
+    this.handler.eventManagerHandler.emit('undo', undo);
     this.replay(undo);
   }, 100);
 
@@ -81,7 +81,7 @@ export class TransactionHandler {
       json: JSON.stringify(mapToObject(this.state))
     });
 
-    this.handler.eventHandler.emit('redo', redo);
+    this.handler.eventManagerHandler.emit('redo', redo);
     this.replay(redo);
   }, 100);
 

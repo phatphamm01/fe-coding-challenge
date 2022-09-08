@@ -42,14 +42,17 @@ const Header: React.FC<IChildrenProp> = () => {
   const forceUpdate = useRerender();
 
   useEffect(() => {
-    handler?.eventHandler.onMulti(['selected', 'changed'], () => {
+    handler?.eventManagerHandler.onMulti(['selected', 'changed'], () => {
       forceUpdate();
     });
 
     return () => {
-      handler?.eventHandler.unsubscribeOfMulti(['selected', 'changed'], () => {
-        forceUpdate();
-      });
+      handler?.eventManagerHandler.unsubscribeOfMulti(
+        ['selected', 'changed'],
+        () => {
+          forceUpdate();
+        }
+      );
     };
   });
 
@@ -103,11 +106,7 @@ const Header: React.FC<IChildrenProp> = () => {
   );
 
   const handleDelete = () => {
-    if (handler?.target?.id) {
-      {
-        handler?.removeById(handler.target?.id);
-      }
-    }
+    handler?.remove();
   };
 
   return (

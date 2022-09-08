@@ -20,14 +20,17 @@ const Config: React.FC<IChildrenProp> = () => {
   const forceUpdate = useRerender();
 
   useEffect(() => {
-    handler?.eventHandler.onMulti(['selected', 'changed'], () => {
+    handler?.eventManagerHandler.onMulti(['selected', 'changed'], () => {
       forceUpdate();
     });
 
     return () => {
-      handler?.eventHandler.unsubscribeOfMulti(['selected', 'changed'], () => {
-        forceUpdate();
-      });
+      handler?.eventManagerHandler.unsubscribeOfMulti(
+        ['selected', 'changed'],
+        () => {
+          forceUpdate();
+        }
+      );
     };
   }, [handler]);
 

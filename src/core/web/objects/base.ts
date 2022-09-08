@@ -66,7 +66,7 @@ export const flexLayoutDefaultObject: () => IObjectFlexLayout = () => ({
   style: {},
   type: 'flexLayout',
   children: [],
-  width: '100%',
+  width: '',
   height: '200px',
   alignItems: 'unset',
   flexDirection: 'unset',

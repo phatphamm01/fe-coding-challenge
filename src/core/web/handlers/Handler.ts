@@ -1,7 +1,9 @@
 import { defaults } from '../constants';
 import { IObjectWebBuilder, KeyEvent } from '../types/core';
-import { EventHandler } from './EventHandler';
+import EventHandler from './EventHandler';
+import { EventManagerHandler } from './EventManagerHandler';
 import { NotifyHandler } from './NotifyHandler';
+import ShortcutHandler from './ShortcutHandler';
 import { StorageHandler } from './StorageHandler';
 import { TransactionHandler } from './TransactionHandler';
 import { UtilsHandler } from './UtilsHandler';
@@ -39,7 +41,7 @@ export class Handler implements HandlerOptions {
   public id: string;
   public container?: HTMLDivElement;
   public editable?: boolean;
-  public keyEvent?: KeyEvent = defaults.keyEvent;
+  public keyEvent: KeyEvent = defaults.keyEvent;
 
   public onAdd?: (object: IObjectWebBuilder) => void;
   public onClick?: (
@@ -55,10 +57,12 @@ export class Handler implements HandlerOptions {
   public onRemove?: (target: IObjectWebBuilder) => void;
 
   public transactionHandler: TransactionHandler;
-  public eventHandler: EventHandler;
+  public eventManagerHandler: EventManagerHandler;
   public storageHandler: StorageHandler;
   public notifyHandler: NotifyHandler;
   public utilsHandler: UtilsHandler;
+  public eventHandler: EventHandler;
+  public shortcutHandler: ShortcutHandler;
 
   public objects: IObject;
   public target?: IObjectWebBuilder;
@@ -92,10 +96,12 @@ export class Handler implements HandlerOptions {
 
   public initHandler = () => {
     this.transactionHandler = new TransactionHandler(this);
-    this.eventHandler = new EventHandler(this);
+    this.eventManagerHandler = new EventManagerHandler(this);
     this.storageHandler = new StorageHandler(this);
     this.notifyHandler = new NotifyHandler(this);
     this.utilsHandler = new UtilsHandler(this);
+    this.eventHandler = new EventHandler(this);
+    this.shortcutHandler = new ShortcutHandler(this);
   };
 
   public getMapObjects = (): IObject => {
@@ -110,7 +116,7 @@ export class Handler implements HandlerOptions {
   public setObjects = (obj: IObject): void => {
     this.objects = obj;
 
-    this.eventHandler.emit('changed', obj);
+    this.eventManagerHandler.emit('changed', obj);
   };
 
   public getContainer = () => {
@@ -120,7 +126,7 @@ export class Handler implements HandlerOptions {
   public onSelected = (obj: IObjectWebBuilder) => {
     this.target = obj;
 
-    this.eventHandler.emit('selected', obj);
+    this.eventManagerHandler.emit('selected', obj);
   };
 
   public findObjectById = (id: string) => {
@@ -129,19 +135,21 @@ export class Handler implements HandlerOptions {
 
   public add = (obj: IObjectWebBuilder) => {
     this.objects.set(obj.id, obj);
-    this.eventHandler.emit('add', obj);
+    this.eventManagerHandler.emit('add', obj);
     this.transactionHandler.save('add');
   };
 
-  public remove = (obj: IObjectWebBuilder) => {
-    this.removeById(obj.id);
+  public remove = () => {
+    if (this.target?.id) {
+      this.removeById(this.target?.id);
+    }
   };
 
   public removeById = (id: string) => {
     this.clear();
     this.objects.delete(id);
 
-    this.eventHandler.emit('remove', id);
+    this.eventManagerHandler.emit('remove', id);
     this.transactionHandler.save('remove');
   };
 
@@ -179,12 +187,12 @@ export class Handler implements HandlerOptions {
     newObj = { ...newObj, [key]: value };
     this.objects.set(obj.id, newObj);
 
-    this.eventHandler.emit('changed', newObj);
+    this.eventManagerHandler.emit('changed', newObj);
   };
 
   public clear = () => {
     this.target = undefined;
-    this.eventHandler.emit('selected', null);
+    this.eventManagerHandler.emit('selected', null);
   };
 
   public reset = () => {
@@ -192,7 +200,7 @@ export class Handler implements HandlerOptions {
     this.objects = new Map();
     this.storageHandler.reset();
 
-    this.eventHandler.emit('changed', null);
+    this.eventManagerHandler.emit('changed', null);
     this.transactionHandler.save('changed');
     this.notifyHandler.notify('success', 'Clear Success');
   };

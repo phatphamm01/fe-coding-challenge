@@ -39,14 +39,17 @@ const EditElement: React.FC<IChildrenProp> = () => {
     handler?.target && document.getElementById(handler?.target.id);
 
   useEffect(() => {
-    handler?.eventHandler.onMulti(['selected', 'changed'], () => {
+    handler?.eventManagerHandler.onMulti(['selected', 'changed'], () => {
       forceUpdate();
     });
 
     return () => {
-      handler?.eventHandler.unsubscribeOfMulti(['selected', 'changed'], () => {
-        forceUpdate();
-      });
+      handler?.eventManagerHandler.unsubscribeOfMulti(
+        ['selected', 'changed'],
+        () => {
+          forceUpdate();
+        }
+      );
     };
   });
 

@@ -28,7 +28,7 @@ const Main: React.FC<IChildrenProp> = () => {
   const forceUpdate = useRerender();
 
   useEffect(() => {
-    handler?.eventHandler.onMulti(
+    handler?.eventManagerHandler.onMulti(
       ['add', 'remove', 'changed', 'redo', 'undo', 'paste', 'selected'],
       () => {
         forceUpdate();
@@ -36,7 +36,7 @@ const Main: React.FC<IChildrenProp> = () => {
     );
 
     return () => {
-      handler?.eventHandler.unsubscribeOfMulti(
+      handler?.eventManagerHandler.unsubscribeOfMulti(
         ['add', 'remove', 'changed', 'redo', 'undo', 'paste', 'selected'],
         () => {
           forceUpdate();
