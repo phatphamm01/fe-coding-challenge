@@ -3,7 +3,7 @@ import throttle from 'lodash/throttle';
 import { IObjectWebBuilder } from '../types/core';
 import { Handler, IObject } from './Handler';
 
-import { cloneMap, mapToObject, objectToMap } from '@/assets/utils/map';
+import { cloneMap, mapToObject, objectToMapHasId } from '@/assets/utils/map';
 
 export type TransactionType =
   | 'add'
@@ -18,7 +18,7 @@ export interface TransactionEvent {
   type: TransactionType;
 }
 
-class TransactionHandler {
+export class TransactionHandler {
   private handler: Handler;
   private redos: TransactionEvent[];
   private undos: TransactionEvent[];
@@ -67,7 +67,7 @@ class TransactionHandler {
       json: JSON.stringify(mapToObject(this.state))
     });
 
-    this.handler.eventHandler.emit('undo', undo);
+    this.handler.eventManagerHandler.emit('undo', undo);
     this.replay(undo);
   }, 100);
 
@@ -81,17 +81,15 @@ class TransactionHandler {
       json: JSON.stringify(mapToObject(this.state))
     });
 
-    this.handler.eventHandler.emit('redo', redo);
+    this.handler.eventManagerHandler.emit('redo', redo);
     this.replay(redo);
   }, 100);
 
   public replay = (transaction: TransactionEvent) => {
     const objects = JSON.parse(transaction.json) as IObjectWebBuilder[];
-    const objectMap = objectToMap(objects);
+    const objectMap = objectToMapHasId(objects);
     this.handler.setObjects(objectMap);
     this.setState(objectMap);
     this.handler.clear();
   };
 }
-
-export default TransactionHandler;

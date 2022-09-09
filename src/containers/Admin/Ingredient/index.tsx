@@ -2,12 +2,13 @@ import { useId, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
+import { IIngredient, ingredientList } from './constant';
+
 import { IChildrenProp } from '@/types/common';
 
 import useDraggable from '@/hooks/useDraggable';
 
 import defaultObject from '@/core/web/objects/base';
-import { ITypeWebBuilder } from '@/core/web/types';
 
 import { useDraggingHandler } from '@/provider/DraggingProvider';
 import { useHandler } from '@/provider/HandlerProvider';
@@ -36,11 +37,6 @@ const IngredientEl = {
   `
 };
 
-type IIngredient = {
-  name: string;
-  type: ITypeWebBuilder;
-};
-
 interface IIngredientItem {
   item: IIngredient;
 }
@@ -51,7 +47,7 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
   const [isMove, setIsMove] = useState<boolean>(false);
 
   const { target } = useDraggable<HTMLDivElement>({
-    delay: 300,
+    delay: 150,
     onStart(event, target, setPosition) {
       target.style.pointerEvents = 'none';
       draggingHandler.dispatch({ type: 'CHANGE_NAME', data: item.name });
@@ -60,20 +56,32 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
     },
     onEnd(event, target, positionInit, setPosition) {
       setPosition(positionInit);
-      target.style.transition = 'transform 300ms ease-in';
+      target.style.transition = 'transform 150ms ease-in';
     },
     onDelayEnd(event, target, positionInit, setPosition) {
       (target.style as any) = '';
       draggingHandler.dispatch({ type: 'CHANGE_NAME', data: '' });
       setIsMove(false);
     },
-    onDropAtElement(event, target, element) {
-      const container = handler?.getContainer();
+    onDropAtElement(event, target, elements) {
+      const elementsAsHTMLElement = elements as HTMLElement[];
 
-      if (!container) return;
-      if (!container.contains(element)) return;
+      const element = elementsAsHTMLElement?.find((value) => {
+        const type = value?.dataset?.type;
+        if (!type) return false;
+        if (type === 'main' || type === 'flexLayout') return true;
+        return false;
+      });
 
-      handler?.add(defaultObject[item.type]());
+      if (!element) return;
+
+      if (element.dataset.type === 'main') {
+        handler?.add(defaultObject[item.type]());
+      }
+
+      if (element.dataset.type === 'flexLayout') {
+        handler?.addToLayout(element.id, defaultObject[item.type]());
+      }
     }
   });
 
@@ -106,14 +114,3 @@ const Ingredient: React.FC<IChildrenProp> = () => {
 };
 
 export default Ingredient;
-
-const ingredientList: IIngredient[] = [
-  {
-    name: 'Paragraph',
-    type: 'paragraph'
-  },
-  {
-    name: 'Button',
-    type: 'button'
-  }
-];

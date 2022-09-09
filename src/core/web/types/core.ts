@@ -1,13 +1,23 @@
 import { ITypeCss } from '@/assets/utils/css';
 
-export type ITypeWebBuilder = 'button' | 'paragraph';
+export type ITypeWebBuilder =
+  | 'button'
+  | 'paragraph'
+  | 'image'
+  | 'list'
+  | 'flexLayout';
 
 export interface IObjectWebBuilder {
   id: string;
   type: ITypeWebBuilder;
   zIndex?: string;
 
+  margin: string;
+  padding: string;
+
   style?: ITypeCss;
+
+  root?: string;
 
   [key: string]: any;
 }

@@ -1,9 +1,9 @@
 import { IObjectWebBuilder } from '../types';
 import { Handler } from './Handler';
 
-import { objectToMap } from '@/assets/utils/map';
+import { objectToMapHasId } from '@/assets/utils/map';
 
-class StorageHandler {
+export class StorageHandler {
   handler: Handler;
 
   constructor(handler: Handler) {
@@ -22,7 +22,7 @@ class StorageHandler {
   public getAsMap = () => {
     const source = this.get();
 
-    return objectToMap(source);
+    return objectToMapHasId(source);
   };
 
   public save = () => {
@@ -30,7 +30,11 @@ class StorageHandler {
       'webBuilder',
       JSON.stringify(this.handler.getObjectsAsArray())
     );
+
+    this.handler.notifyHandler.notify('success', 'Save Success');
+  };
+
+  public reset = () => {
+    localStorage.setItem('webBuilder', '');
   };
 }
-
-export default StorageHandler;

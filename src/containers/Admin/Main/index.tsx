@@ -7,11 +7,9 @@ import Dragging from './Dragging';
 
 import { IChildrenProp } from '@/types/common';
 
-import PositionMouse from '@/design/PositionMouse';
+import PositionMouse from '@/containers/Admin/Main/PositionMouse';
 
 import { useRerender } from '@/hooks/useRerender';
-
-import WebBuilderObject from '@/core/web/objects';
 
 import { useHandler } from '@/provider/HandlerProvider';
 
@@ -19,7 +17,7 @@ const MainContainer = styled.div`
   ${tw`relative border-b flex-grow overflow-y-auto`}
 `;
 const Container = styled.div`
-  ${tw`h-full w-full flex flex-col items-center overflow-auto`}
+  ${tw`h-full w-full overflow-auto p-2`}
 `;
 const Instances = styled.div`
   ${tw``}
@@ -30,16 +28,16 @@ const Main: React.FC<IChildrenProp> = () => {
   const forceUpdate = useRerender();
 
   useEffect(() => {
-    handler?.eventHandler.onMulti(
-      ['add', 'remove', 'changed', 'redo', 'undo', 'paste'],
+    handler?.eventManagerHandler.onMulti(
+      ['add', 'remove', 'changed', 'redo', 'undo', 'paste', 'selected'],
       () => {
         forceUpdate();
       }
     );
 
     return () => {
-      handler?.eventHandler.unsubscribeOfMulti(
-        ['add', 'remove', 'changed', 'redo', 'undo', 'paste'],
+      handler?.eventManagerHandler.unsubscribeOfMulti(
+        ['add', 'remove', 'changed', 'redo', 'undo', 'paste', 'selected'],
         () => {
           forceUpdate();
         }
@@ -48,8 +46,8 @@ const Main: React.FC<IChildrenProp> = () => {
   }, [handler]);
 
   return (
-    <MainContainer>
-      <div tw="absolute space-y-2 left-4 top-4 w-[50vh]">
+    <MainContainer data-type="main">
+      <div tw="absolute space-y-2 right-4 bottom-4 w-[40vw] pointer-events-none z-0">
         <PositionMouse />
         <Dragging />
         <Instances>
@@ -59,19 +57,7 @@ const Main: React.FC<IChildrenProp> = () => {
       </div>
 
       <Container id={handler?.id}>
-        {handler?.getObjectsAsArray().map((value) => {
-          const Comp = WebBuilderObject[value.type].create({
-            data: value
-          });
-
-          return (
-            <Comp
-              onClick={() => handler?.onSelected?.(value)}
-              key={value.id}
-              data={value}
-            />
-          );
-        })}
+        {handler?.utilsHandler.renderElement(handler?.getObjectsAsArray())}
       </Container>
     </MainContainer>
   );

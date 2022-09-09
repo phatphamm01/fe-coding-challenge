@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
-import { genCss } from '@/assets/utils/css';
+import { ITypeCss, genCss } from '@/assets/utils/css';
 
 import { IObjectButton } from '@/core/web/types';
 
-interface IButton {
+interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   data: IObjectButton;
 }
 
@@ -13,11 +13,50 @@ const ButtonContainer = styled.button<{ css: string }>`
 `;
 
 const Button: React.FC<IButton> = ({
-  data: { id, style = {}, title, type },
+  data: {
+    id,
+    style = {},
+    title,
+    type,
+    alert: message,
+    margin,
+    padding,
+    height,
+    width,
+    display
+  },
+  onClick,
   ...rest
 }) => {
+  const styles: ITypeCss = {
+    padding: {
+      default: padding
+    },
+    margin: {
+      default: margin
+    },
+    height: {
+      default: height
+    },
+    width: {
+      default: width
+    },
+    display: { default: display }
+  };
+
   return (
-    <ButtonContainer id={id} css={genCss(style)} {...rest}>
+    <ButtonContainer
+      id={id}
+      css={genCss({ ...style, ...styles })}
+      {...(rest as any)}
+      onClick={(e) => {
+        if (onClick) {
+          onClick && onClick(e);
+        } else {
+          alert(message);
+        }
+      }}
+    >
       {title}
     </ButtonContainer>
   );

@@ -2,14 +2,21 @@ import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
-import { IChildrenProp } from '@/types/common';
+import Button from './Button';
+import FlexLayout from './FlexLayout';
+import Image from './Image';
+import List from './List';
+import Paragraph from './Paragraph';
 
-import Input from '@/design/Input';
+import { IChildrenProp } from '@/types/common';
 
 import { useRerender } from '@/hooks/useRerender';
 
 import {
   IObjectButton,
+  IObjectFlexLayout,
+  IObjectImage,
+  IObjectList,
   IObjectParagraph,
   ITypeWebBuilder
 } from '@/core/web/types';
@@ -17,60 +24,54 @@ import {
 import { useHandler } from '@/provider/HandlerProvider';
 
 const EditElementContainer = styled.div`
-  ${tw`h-[30vh]`}
+  ${tw`h-[30vh] overflow-auto`}
 `;
 
 const EditElementBox = styled.div`
-  ${tw`px-6 pt-4`}
+  ${tw`px-6 py-4`}
 `;
 
 const EditElement: React.FC<IChildrenProp> = () => {
   const handler = useHandler();
   const forceUpdate = useRerender();
 
+  const targetEl =
+    handler?.target && document.getElementById(handler?.target.id);
+
   useEffect(() => {
-    handler?.eventHandler.on('selected', (value) => {
+    handler?.eventManagerHandler.onMulti(['selected', 'changed'], () => {
       forceUpdate();
     });
-  }, [handler]);
+
+    return () => {
+      handler?.eventManagerHandler.unsubscribeOfMulti(
+        ['selected', 'changed'],
+        () => {
+          forceUpdate();
+        }
+      );
+    };
+  });
 
   const renderOption: Record<ITypeWebBuilder, any> = useMemo(
     () => ({
-      button: (value: IObjectButton) => (
-        <div key={value.id} className="grid gap-6 mb-6 grid-cols-2">
-          <Input
-            title="Title"
-            name="title"
-            value={value.title}
-            onChange={(val) => {
-              handler?.modifyObject(value, { key: 'title', value: val });
-            }}
-          />
-          <Input title="Alert" name="title" value={value.alert} />
-        </div>
-      ),
-      paragraph: (value: IObjectParagraph) => (
-        <div key={value.id} className="grid gap-6 mb-6 grid-cols-2">
-          <Input
-            title="Title"
-            name="title"
-            value={value.title}
-            onChange={(val) => {
-              handler?.modifyObject(value, { key: 'title', value: val });
-            }}
-          />
-        </div>
-      )
+      button: (value: IObjectButton) => <Button value={value} />,
+      paragraph: (value: IObjectParagraph) => <Paragraph value={value} />,
+      image: (value: IObjectImage) => <Image value={value} />,
+      list: (value: IObjectList) => <List value={value} />,
+      flexLayout: (value: IObjectFlexLayout) => <FlexLayout value={value} />
     }),
     [handler]
   );
 
   return (
     <EditElementContainer>
-      <EditElementBox>
-        {handler?.target?.type &&
-          renderOption[handler?.target?.type](handler?.target)}
-      </EditElementBox>
+      {targetEl && (
+        <EditElementBox>
+          {handler?.target?.type &&
+            renderOption[handler?.target?.type](handler?.target)}
+        </EditElementBox>
+      )}
     </EditElementContainer>
   );
 };

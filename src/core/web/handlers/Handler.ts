@@ -1,11 +1,17 @@
 import { defaults } from '../constants';
+import { IObjectFlexLayout } from '../types';
 import { IObjectWebBuilder, KeyEvent } from '../types/core';
 import EventHandler from './EventHandler';
-import StorageHandler from './StorageHandler';
-import TransactionHandler from './TransactionHandler';
+import { EventManagerHandler } from './EventManagerHandler';
+import { NotifyHandler } from './NotifyHandler';
+import ShortcutHandler from './ShortcutHandler';
+import { StorageHandler } from './StorageHandler';
+import { TransactionHandler } from './TransactionHandler';
+import { UtilsHandler } from './UtilsHandler';
 
+import { randomId } from '@/assets/common';
 import { saveTemplateAsFile } from '@/assets/utils/download';
-import { objectToMap } from '@/assets/utils/map';
+import { objectToMapHasId } from '@/assets/utils/map';
 
 export type IObject = Map<string, IObjectWebBuilder>;
 export interface HandlerOption {
@@ -14,6 +20,7 @@ export interface HandlerOption {
   editable?: boolean;
   keyEvent?: KeyEvent;
   objects?: IObject;
+
   [key: string]: any;
 }
 
@@ -37,7 +44,9 @@ export class Handler implements HandlerOptions {
   public id: string;
   public container?: HTMLDivElement;
   public editable?: boolean;
-  public keyEvent?: KeyEvent = defaults.keyEvent;
+  public keyEvent: KeyEvent = defaults.keyEvent;
+
+  private clipboard: any = null;
 
   public onAdd?: (object: IObjectWebBuilder) => void;
   public onClick?: (
@@ -53,8 +62,12 @@ export class Handler implements HandlerOptions {
   public onRemove?: (target: IObjectWebBuilder) => void;
 
   public transactionHandler: TransactionHandler;
-  public eventHandler: EventHandler;
+  public eventManagerHandler: EventManagerHandler;
   public storageHandler: StorageHandler;
+  public notifyHandler: NotifyHandler;
+  public utilsHandler: UtilsHandler;
+  public eventHandler: EventHandler;
+  public shortcutHandler: ShortcutHandler;
 
   public objects: IObject;
   public target?: IObjectWebBuilder;
@@ -88,12 +101,16 @@ export class Handler implements HandlerOptions {
 
   public initHandler = () => {
     this.transactionHandler = new TransactionHandler(this);
-    this.eventHandler = new EventHandler(this);
+    this.eventManagerHandler = new EventManagerHandler(this);
     this.storageHandler = new StorageHandler(this);
+    this.notifyHandler = new NotifyHandler(this);
+    this.utilsHandler = new UtilsHandler(this);
+    this.eventHandler = new EventHandler(this);
+    this.shortcutHandler = new ShortcutHandler(this);
   };
 
   public getMapObjects = (): IObject => {
-    return this.objects;
+    return Object.assign(this.objects);
   };
 
   public getObjectsAsArray = (): IObjectWebBuilder[] => {
@@ -104,7 +121,7 @@ export class Handler implements HandlerOptions {
   public setObjects = (obj: IObject): void => {
     this.objects = obj;
 
-    this.eventHandler.emit('changed', obj);
+    this.eventManagerHandler.emit('changed', obj);
   };
 
   public getContainer = () => {
@@ -114,24 +131,55 @@ export class Handler implements HandlerOptions {
   public onSelected = (obj: IObjectWebBuilder) => {
     this.target = obj;
 
-    this.eventHandler.emit('selected', obj);
+    this.eventManagerHandler.emit('selected', obj);
+  };
+
+  public findObjectById = (id: string) => {
+    return this.getMapObjects().get(id);
   };
 
   public add = (obj: IObjectWebBuilder) => {
     this.objects.set(obj.id, obj);
-    this.eventHandler.emit('add', obj);
+    this.eventManagerHandler.emit('add', obj);
     this.transactionHandler.save('add');
   };
 
-  public remove = (obj: IObjectWebBuilder) => {
-    this.removeById(obj.id);
+  public addToLayout = (idLayout: string, obj: IObjectWebBuilder) => {
+    const object = this.getMapObjects().get(idLayout) as IObjectFlexLayout;
+    if (!object) return;
 
-    this.eventHandler.emit('remove', obj);
-    this.transactionHandler.save('remove');
+    const newObject = { ...obj };
+    newObject.root = object.id;
+
+    this.add(newObject);
+
+    this.modifyObject(object, {
+      key: 'children',
+      value: [...object.children, newObject.id]
+    });
+  };
+
+  public remove = () => {
+    if (this.target?.id) {
+      this.removeById(this.target?.id);
+    }
   };
 
   public removeById = (id: string) => {
+    this.clear();
+
+    const object = this.getMapObjects().get(id);
+    if (object?.type === 'flexLayout') {
+      const objFlexLayout = object as IObjectFlexLayout;
+
+      objFlexLayout.children.forEach((value) => {
+        this.objects.delete(value);
+      });
+    }
+
     this.objects.delete(id);
+    this.eventManagerHandler.emit('remove', id);
+    this.transactionHandler.save('remove');
   };
 
   public setKeyEvent = (keyEvent: KeyEvent) => {
@@ -140,18 +188,27 @@ export class Handler implements HandlerOptions {
 
   public exportJson = () => {
     saveTemplateAsFile('data.json', this.getObjectsAsArray());
+    this.notifyHandler.notify('success', 'Export Success');
   };
 
   public importJson = (source: IObjectWebBuilder[]) => {
-    const map = objectToMap(source);
+    const map = objectToMapHasId(source);
+
+    this.setObjects(map);
+    this.transactionHandler.save('changed');
+    this.notifyHandler.notify('success', 'Import Success');
+  };
+
+  public importDataStorage = (source: IObjectWebBuilder[]) => {
+    const map = objectToMapHasId(source);
 
     this.setObjects(map);
     this.transactionHandler.save('changed');
   };
 
-  public modifyObject = (
+  public modifyObject = <T = string>(
     obj: IObjectWebBuilder,
-    { key, value }: { key: keyof IObjectWebBuilder; value: string }
+    { key, value }: { key: keyof IObjectWebBuilder; value: T }
   ) => {
     let newObj = this.objects.get(obj.id);
     if (!newObj) return;
@@ -159,12 +216,72 @@ export class Handler implements HandlerOptions {
     newObj = { ...newObj, [key]: value };
     this.objects.set(obj.id, newObj);
 
-    this.eventHandler.emit('changed', newObj);
+    this.eventManagerHandler.emit('changed', newObj);
   };
 
   public clear = () => {
     this.target = undefined;
-    this.eventHandler.emit('selected', null);
+    this.eventManagerHandler.emit('selected', null);
+  };
+
+  public reset = () => {
+    this.clear();
+    this.objects = new Map();
+    this.storageHandler.reset();
+
+    this.eventManagerHandler.emit('changed', null);
+    this.transactionHandler.save('changed');
+    this.notifyHandler.notify('success', 'Clear Success');
+  };
+
+  public copyToClipboard = (value: any) => {
+    const textarea = document.createElement('textarea');
+    document.body.appendChild(textarea);
+    textarea.value = value;
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  };
+
+  public copy = () => {
+    const object = this.target;
+    if (!object) return;
+
+    this.copyToClipboard(JSON.stringify(object, null, '\t'));
+    this.clipboard = object;
+  };
+
+  public paste = () => {
+    const object = this.target;
+    console.log({ a: this.clipboard });
+
+    const newObject = { ...this.clipboard, id: randomId() };
+
+    if (object?.type === 'flexLayout') {
+      const children = (newObject as IObjectFlexLayout).children;
+
+      const newChildren = children.filter((value) => {
+        const obj = this.getMapObjects().get(value);
+
+        if (!obj) return false;
+
+        const id = randomId();
+        this.add({ ...obj, id });
+
+        return id;
+      });
+      console.log(newChildren);
+
+      this.add({ ...newObject, children: newChildren });
+      return;
+    } else {
+      this.add(newObject);
+    }
+  };
+
+  public cut = () => {
+    this.copy();
+    this.remove();
   };
 }
 

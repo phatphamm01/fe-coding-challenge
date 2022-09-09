@@ -1,8 +1,11 @@
+import { prettyPrintJson } from 'pretty-print-json';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
 import { IChildrenProp } from '@/types/common';
+
+import '@/assets/scss/pretty-print-json.scss';
 
 import { useRerender } from '@/hooks/useRerender';
 
@@ -17,20 +20,32 @@ const Config: React.FC<IChildrenProp> = () => {
   const forceUpdate = useRerender();
 
   useEffect(() => {
-    handler?.eventHandler.on('selected', () => {
+    handler?.eventManagerHandler.onMulti(['selected', 'changed'], () => {
       forceUpdate();
     });
 
     return () => {
-      handler?.eventHandler.unsubscribeOf('selected', () => {
-        forceUpdate();
-      });
+      handler?.eventManagerHandler.unsubscribeOfMulti(
+        ['selected', 'changed'],
+        () => {
+          forceUpdate();
+        }
+      );
     };
   }, [handler]);
 
+  const objectSelected =
+    handler?.target?.id && handler?.findObjectById(handler.target?.id);
+
   return (
     <ConfigContainer>
-      <b>Config:</b> {JSON.stringify(handler?.target)}
+      <b>Config: </b>
+      <div
+        tw="inline"
+        dangerouslySetInnerHTML={{
+          __html: prettyPrintJson.toHtml(objectSelected || '💦', {})
+        }}
+      />
     </ConfigContainer>
   );
 };

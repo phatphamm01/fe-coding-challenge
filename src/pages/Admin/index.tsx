@@ -6,7 +6,7 @@ import HandlerProvider from '@/provider/HandlerProvider';
 const Admin: React.FC = () => {
   return (
     <DraggingProvider>
-      <HandlerProvider>
+      <HandlerProvider options={{ editable: true }}>
         <AdminPage />
       </HandlerProvider>
     </DraggingProvider>
