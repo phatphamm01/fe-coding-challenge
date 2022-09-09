@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "google-font-metadata": "^4.1.0",
     "lodash": "^4.17.21",
     "pretty-print-json": "^1.2.6",

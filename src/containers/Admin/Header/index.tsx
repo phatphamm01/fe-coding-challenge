@@ -10,6 +10,8 @@ import CancelIcon from '@/icons/Cancel';
 
 import { useRerender } from '@/hooks/useRerender';
 
+import fetchWebPage from '@/services/webPage';
+
 import { IObjectWebBuilder } from '@/core/web/types';
 
 import { useHandler } from '@/provider/HandlerProvider';
@@ -65,7 +67,17 @@ const Header: React.FC<IChildrenProp> = () => {
       {
         name: 'Save',
         onClick: () => {
-          handler?.storageHandler.save();
+          const id = handler?.id;
+          if (!id) return;
+
+          fetchWebPage.update({
+            _id: id,
+            data: {
+              json: JSON.stringify(handler?.getObjectsAsArray() || {})
+            }
+          });
+
+          handler.notifyHandler.notify('success', 'Update Success');
         }
       },
       {
@@ -96,7 +108,7 @@ const Header: React.FC<IChildrenProp> = () => {
       {
         name: 'View',
         onClick: () => {
-          navigate('./consumer');
+          navigate('/consumer/' + handler?.id);
         }
       }
     ],
@@ -109,6 +121,9 @@ const Header: React.FC<IChildrenProp> = () => {
 
   return (
     <HeaderContainer>
+      <div className="absolute cursor-pointer top-[50%] -translate-y-1/2 left-10">
+        {handler?.id}
+      </div>
       <HeaderBox>
         <ActionList>
           {actionList.map((value) => (

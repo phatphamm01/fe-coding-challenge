@@ -5,7 +5,6 @@ import EventHandler from './EventHandler';
 import { EventManagerHandler } from './EventManagerHandler';
 import { NotifyHandler } from './NotifyHandler';
 import ShortcutHandler from './ShortcutHandler';
-import { StorageHandler } from './StorageHandler';
 import { TransactionHandler } from './TransactionHandler';
 import { UtilsHandler } from './UtilsHandler';
 
@@ -63,7 +62,6 @@ export class Handler implements HandlerOptions {
 
   public transactionHandler: TransactionHandler;
   public eventManagerHandler: EventManagerHandler;
-  public storageHandler: StorageHandler;
   public notifyHandler: NotifyHandler;
   public utilsHandler: UtilsHandler;
   public eventHandler: EventHandler;
@@ -102,7 +100,6 @@ export class Handler implements HandlerOptions {
   public initHandler = () => {
     this.transactionHandler = new TransactionHandler(this);
     this.eventManagerHandler = new EventManagerHandler(this);
-    this.storageHandler = new StorageHandler(this);
     this.notifyHandler = new NotifyHandler(this);
     this.utilsHandler = new UtilsHandler(this);
     this.eventHandler = new EventHandler(this);
@@ -199,7 +196,7 @@ export class Handler implements HandlerOptions {
     this.notifyHandler.notify('success', 'Import Success');
   };
 
-  public importDataStorage = (source: IObjectWebBuilder[]) => {
+  public importJsonToApi = (source: IObjectWebBuilder[]) => {
     const map = objectToMapHasId(source);
 
     this.setObjects(map);
@@ -219,6 +216,11 @@ export class Handler implements HandlerOptions {
     this.eventManagerHandler.emit('changed', newObj);
   };
 
+  public destroy = () => {
+    this.objects = new Map();
+    this.eventHandler.destroy();
+  };
+
   public clear = () => {
     this.target = undefined;
     this.eventManagerHandler.emit('selected', null);
@@ -227,7 +229,6 @@ export class Handler implements HandlerOptions {
   public reset = () => {
     this.clear();
     this.objects = new Map();
-    this.storageHandler.reset();
 
     this.eventManagerHandler.emit('changed', null);
     this.transactionHandler.save('changed');
