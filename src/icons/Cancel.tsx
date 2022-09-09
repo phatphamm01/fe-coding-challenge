@@ -14,6 +14,7 @@ const CancelIcon: FC<ISVGIcon> = ({ ...rest }) => (
     fill="none"
     viewBox="0 0 24 24"
     strokeWidth="1.5"
+    className="w-6 h-6"
     stroke="currentColor"
     {...(rest as any)}
   >
