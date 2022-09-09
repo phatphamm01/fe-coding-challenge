@@ -11,6 +11,11 @@ export interface IObjectFlexLayout extends IObjectWebBuilder {
 
   padding: string;
   margin: string;
+  gap: string;
+
+  background: string;
+  borderRadius: string;
+  boxShadow: string;
 
   children: string[];
 }

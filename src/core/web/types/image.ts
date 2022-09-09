@@ -8,4 +8,5 @@ export interface IObjectImage extends IObjectWebBuilder {
   height: string;
   width: string;
   objectFit: Property.ObjectFit;
+  borderRadius: string;
 }

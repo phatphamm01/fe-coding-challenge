@@ -41,6 +41,7 @@ const Paragraph: React.FC<IParagraph> = ({
       default: margin
     }
   };
+  
   return (
     <ParagraphContainer
       id={id}

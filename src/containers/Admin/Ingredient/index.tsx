@@ -9,7 +9,6 @@ import { IChildrenProp } from '@/types/common';
 import useDraggable from '@/hooks/useDraggable';
 
 import defaultObject from '@/core/web/objects/base';
-import { IObjectFlexLayout, IObjectWebBuilder } from '@/core/web/types';
 
 import { useDraggingHandler } from '@/provider/DraggingProvider';
 import { useHandler } from '@/provider/HandlerProvider';
@@ -66,14 +65,11 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
     },
     onDropAtElement(event, target, elements) {
       const elementsAsHTMLElement = elements as HTMLElement[];
-      const container = handler?.getContainer();
-
-      if (!container) return;
 
       const element = elementsAsHTMLElement?.find((value) => {
         const type = value?.dataset?.type;
         if (!type) return false;
-        if (type === 'main' || type === 'layout') return true;
+        if (type === 'main' || type === 'flexLayout') return true;
         return false;
       });
 
@@ -83,21 +79,8 @@ const IngredientItem: React.FC<IIngredientItem> = ({ item }) => {
         handler?.add(defaultObject[item.type]());
       }
 
-      if (element.dataset.type === 'layout') {
-        const object = handler
-          ?.getMapObjects()
-          .get(element.id) as IObjectFlexLayout;
-        if (!object) return;
-
-        const newObject = defaultObject[item.type]() as IObjectWebBuilder;
-        newObject.root = object.id;
-
-        handler?.add(newObject);
-
-        handler?.modifyObject(object, {
-          key: 'children',
-          value: [...object.children, newObject.id]
-        });
+      if (element.dataset.type === 'flexLayout') {
+        handler?.addToLayout(element.id, defaultObject[item.type]());
       }
     }
   });

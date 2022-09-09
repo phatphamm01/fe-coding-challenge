@@ -26,10 +26,26 @@ class EventHandler {
 
   public keydown = (e: KeyboardEvent) => {
     const { keyEvent, editable } = this.handler;
+    console.dir(e.target);
+
+    if ((e?.target as any).nodeName === 'INPUT') return;
+    console.log('----');
 
     if (editable) {
       if (this.handler.shortcutHandler.isDelete(e)) {
         this.handler.remove();
+      } else if (this.handler.shortcutHandler.isCtrlC(e)) {
+        e.preventDefault();
+        this.handler.copy();
+      } else if (
+        this.handler.shortcutHandler.isCtrlV(e) &&
+        !keyEvent.clipboard
+      ) {
+        e.preventDefault();
+        this.handler.paste();
+      } else if (this.handler.shortcutHandler.isCtrlX(e)) {
+        e.preventDefault();
+        this.handler.cut();
       } else if (this.handler.shortcutHandler.isCtrlZ(e)) {
         e.preventDefault();
         this.handler.transactionHandler.undo();

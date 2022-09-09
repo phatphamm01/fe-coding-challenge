@@ -10,16 +10,15 @@ export class UtilsHandler {
 
   renderElement = (
     data: IObjectWebBuilder[],
-    type: 'main' | 'layout' = 'main'
+    type: 'main' | 'flexLayout' = 'main'
   ) => {
     return data.map((value) => {
-      const Comp = WebBuilderObject[value.type].create({
-        data: value
-      });
-
       if (type === 'main' && value.root) {
         return;
       }
+      const Comp = WebBuilderObject[value.type].create({
+        data: value
+      });
 
       return (
         <Comp
@@ -28,10 +27,12 @@ export class UtilsHandler {
               this.handler.target?.id === value.id ? '1px solid blue' : ''
           }}
           onClick={(event) => {
-            event.stopPropagation();
-            // (event as any).cancelBubble = true;
+            if (this.handler.editable) {
+              event.stopPropagation();
+              // (event as any).cancelBubble = true;
 
-            this.handler?.onSelected?.(value);
+              this.handler?.onSelected?.(value);
+            }
           }}
           key={value.id}
           data={value}

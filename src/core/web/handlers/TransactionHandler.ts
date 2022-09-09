@@ -3,7 +3,7 @@ import throttle from 'lodash/throttle';
 import { IObjectWebBuilder } from '../types/core';
 import { Handler, IObject } from './Handler';
 
-import { cloneMap, mapToObject, objectToMap } from '@/assets/utils/map';
+import { cloneMap, mapToObject, objectToMapHasId } from '@/assets/utils/map';
 
 export type TransactionType =
   | 'add'
@@ -87,7 +87,7 @@ export class TransactionHandler {
 
   public replay = (transaction: TransactionEvent) => {
     const objects = JSON.parse(transaction.json) as IObjectWebBuilder[];
-    const objectMap = objectToMap(objects);
+    const objectMap = objectToMapHasId(objects);
     this.handler.setObjects(objectMap);
     this.setState(objectMap);
     this.handler.clear();

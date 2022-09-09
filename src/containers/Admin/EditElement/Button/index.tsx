@@ -1,6 +1,7 @@
 import { IChildrenProp } from '@/types/common';
 
 import Input from '@/design/Input';
+import Select from '@/design/Select';
 
 import { IObjectButton } from '@/core/web/types';
 
@@ -13,8 +14,8 @@ interface IButton {
 const Button: React.FC<IChildrenProp & IButton> = ({ value }) => {
   const handler = useHandler();
   return (
-    <div className="grid gap-2 mb-6">
-      <div key={value.id} className="grid gap-6 grid-cols-2">
+    <div key={value.id} className="grid gap-2 mb-6">
+      <div className="grid gap-6 grid-cols-2">
         <Input
           title="Title"
           name="title"
@@ -29,6 +30,39 @@ const Button: React.FC<IChildrenProp & IButton> = ({ value }) => {
           value={value.alert}
           onChange={(val) => {
             handler?.modifyObject(value, { key: 'alert', value: val });
+          }}
+        />
+      </div>
+      <div className="grid gap-6 grid-cols-3">
+        <Input
+          title="Height"
+          name="height"
+          value={value.height || ''}
+          onChange={(val) => {
+            handler?.modifyObject(value, { key: 'height', value: val });
+          }}
+        />
+        <Input
+          title="Width"
+          name="width"
+          value={value.width || ''}
+          onChange={(val) => {
+            handler?.modifyObject(value, { key: 'width', value: val });
+          }}
+        />
+        <Select
+          title="Display"
+          data={['block', 'inline'].map((value) => ({
+            title: value,
+            value: value
+          }))}
+          name="display"
+          value={{ title: value.display, value: value.display }}
+          onChange={(val) => {
+            handler?.modifyObject(value, {
+              key: 'display',
+              value: val.value
+            });
           }}
         />
       </div>
@@ -49,7 +83,6 @@ const Button: React.FC<IChildrenProp & IButton> = ({ value }) => {
             handler?.modifyObject(value, { key: 'padding', value: val });
           }}
         />
-        <div />
       </div>
     </div>
   );

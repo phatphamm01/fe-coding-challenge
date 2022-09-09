@@ -28,7 +28,11 @@ const Layout: React.FC<ILayout> = ({
     height,
     width,
     margin,
-    padding
+    padding,
+    gap,
+    background,
+    boxShadow,
+    borderRadius
   },
   ...rest
 }) => {
@@ -58,11 +62,21 @@ const Layout: React.FC<ILayout> = ({
     margin: {
       default: margin
     },
+    gap: {
+      default: gap
+    },
+    borderRadius: {
+      default: borderRadius
+    },
+    boxShadow: {
+      default: boxShadow
+    },
     backgroundColor: {
       default: handler?.editable
         ? `rgba(${color.r}, ${color.g}, ${color.b}, 0.2)`
         : ''
-    }
+    },
+    background: { default: background }
   };
 
   const childrenObject =
@@ -73,11 +87,11 @@ const Layout: React.FC<ILayout> = ({
   return (
     <LayoutContainer
       id={id}
-      data-type="layout"
+      data-type="flexLayout"
       css={genCss({ ...stylesLayout })}
       {...rest}
     >
-      {handler?.utilsHandler.renderElement(childrenObject, 'layout')}
+      {handler?.utilsHandler.renderElement(childrenObject, 'flexLayout')}
     </LayoutContainer>
   );
 };

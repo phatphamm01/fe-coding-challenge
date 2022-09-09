@@ -16,7 +16,7 @@ const Image: React.FC<IChildrenProp & IImage> = ({ value }) => {
   const handler = useHandler();
 
   return (
-    <div className="grid gap-6">
+    <div key={value.id} className="grid gap-6">
       <div className="grid gap-6 grid-cols-2">
         <Input
           title="Name"
@@ -35,7 +35,7 @@ const Image: React.FC<IChildrenProp & IImage> = ({ value }) => {
           }}
         />
       </div>
-      <div className="grid gap-6 grid-cols-2">
+      <div className="grid gap-6 grid-cols-3">
         <Input
           title="Margin"
           name="margin"
@@ -50,6 +50,14 @@ const Image: React.FC<IChildrenProp & IImage> = ({ value }) => {
           value={value.padding || ''}
           onChange={(val) => {
             handler?.modifyObject(value, { key: 'padding', value: val });
+          }}
+        />
+        <Input
+          title="Border Radius"
+          name="borderRadius"
+          value={value.borderRadius || ''}
+          onChange={(val) => {
+            handler?.modifyObject(value, { key: 'borderRadius', value: val });
           }}
         />
       </div>

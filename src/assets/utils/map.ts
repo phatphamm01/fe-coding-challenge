@@ -6,6 +6,14 @@ export const objectToMap = (obj: any): Map<any, any> => {
   return new Map(Object.entries(obj));
 };
 
+export const objectToMapHasId = (obj: any): Map<any, any> => {
+  const newMap = new Map();
+  Object.keys(obj).forEach((value: any) => {
+    newMap.set(obj[value]?.id, obj?.[value]);
+  });
+  return newMap;
+};
+
 export const mapToObject = (source: Map<any, any>) => {
   return Object.fromEntries(source);
 };

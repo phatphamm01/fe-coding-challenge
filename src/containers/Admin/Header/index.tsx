@@ -37,8 +37,6 @@ const Header: React.FC<IChildrenProp> = () => {
   const targetEl =
     handler?.target && document.getElementById(handler?.target.id);
 
-  console.log(targetEl);
-
   const forceUpdate = useRerender();
 
   useEffect(() => {

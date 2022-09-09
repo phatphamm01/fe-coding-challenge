@@ -12,18 +12,20 @@ import { randomId } from '@/assets/common';
 export const buttonDefaultObject: () => IObjectButton = () => ({
   id: randomId(),
   style: {
-    display: { default: 'inline-block' },
     width: { default: '80%', tablet: '200px' },
     borderRadius: { default: '4px' },
     border: {
       default: '1px solid #333'
     }
   },
+  width: '',
+  height: '',
   margin: '4px',
   padding: '4px',
   title: 'Button',
   type: 'button',
-  message: 'Thông báo'
+  message: 'Thông báo',
+  display: 'block'
 });
 
 export const paragraphDefaultObject: () => IObjectParagraph = () => ({
@@ -47,7 +49,8 @@ export const imageDefaultObject: () => IObjectImage = () => ({
   type: 'image',
   objectFit: 'cover',
   height: '',
-  width: ''
+  width: '',
+  borderRadius: ''
 });
 
 export const listDefaultObject: () => IObjectList = () => ({
@@ -72,7 +75,11 @@ export const flexLayoutDefaultObject: () => IObjectFlexLayout = () => ({
   flexDirection: 'unset',
   justifyContent: 'unset',
   padding: '4px',
-  margin: '4px'
+  margin: '',
+  gap: '',
+  background: '',
+  borderRadius: '',
+  boxShadow: ''
 });
 
 const defaultObject: Record<ITypeWebBuilder, any> = {

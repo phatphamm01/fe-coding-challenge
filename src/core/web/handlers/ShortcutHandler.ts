@@ -12,9 +12,7 @@ class ShortcutHandler {
   }
 
   public isDelete = (e: KeyboardEvent) => {
-    return (
-      (e.code === code.BACKSPACE || e.code === code.DELETE) && this.keyEvent.del
-    );
+    return e.code === code.DELETE && this.keyEvent.del;
   };
 
   public isCtrlC = (e: KeyboardEvent) => {

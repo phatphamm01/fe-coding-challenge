@@ -1,7 +1,7 @@
 import { IObjectWebBuilder } from '../types';
 import { Handler } from './Handler';
 
-import { objectToMap } from '@/assets/utils/map';
+import { objectToMapHasId } from '@/assets/utils/map';
 
 export class StorageHandler {
   handler: Handler;
@@ -22,7 +22,7 @@ export class StorageHandler {
   public getAsMap = () => {
     const source = this.get();
 
-    return objectToMap(source);
+    return objectToMapHasId(source);
   };
 
   public save = () => {

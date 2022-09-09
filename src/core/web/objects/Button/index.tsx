@@ -13,7 +13,18 @@ const ButtonContainer = styled.button<{ css: string }>`
 `;
 
 const Button: React.FC<IButton> = ({
-  data: { id, style = {}, title, type, alert: message, margin, padding },
+  data: {
+    id,
+    style = {},
+    title,
+    type,
+    alert: message,
+    margin,
+    padding,
+    height,
+    width,
+    display
+  },
   onClick,
   ...rest
 }) => {
@@ -23,7 +34,14 @@ const Button: React.FC<IButton> = ({
     },
     margin: {
       default: margin
-    }
+    },
+    height: {
+      default: height
+    },
+    width: {
+      default: width
+    },
+    display: { default: display }
   };
 
   return (

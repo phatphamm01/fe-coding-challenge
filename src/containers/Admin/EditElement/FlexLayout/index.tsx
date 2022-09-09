@@ -23,7 +23,7 @@ const FlexLayout: React.FC<IChildrenProp & IFlexLayout> = ({ value }) => {
   const handler = useHandler();
 
   return (
-    <FlexLayoutContainer>
+    <FlexLayoutContainer key={value.id}>
       <div className="grid gap-2 mb-6">
         <div className="grid gap-6 grid-cols-2">
           <Input
@@ -42,9 +42,16 @@ const FlexLayout: React.FC<IChildrenProp & IFlexLayout> = ({ value }) => {
               handler?.modifyObject(value, { key: 'width', value: val });
             }}
           />
-          <div />
         </div>
-        <div className="grid gap-6 grid-cols-2">
+        <div className="grid gap-6 grid-cols-3">
+          <Input
+            title="Gap"
+            name="gap"
+            value={value.gap || ''}
+            onChange={(val) => {
+              handler?.modifyObject(value, { key: 'gap', value: val });
+            }}
+          />
           <Input
             title="Margin"
             name="margin"
@@ -61,7 +68,6 @@ const FlexLayout: React.FC<IChildrenProp & IFlexLayout> = ({ value }) => {
               handler?.modifyObject(value, { key: 'padding', value: val });
             }}
           />
-          <div />
         </div>
         <div className="grid gap-6 grid-cols-3">
           <Select
@@ -110,6 +116,32 @@ const FlexLayout: React.FC<IChildrenProp & IFlexLayout> = ({ value }) => {
                 key: 'alignItems',
                 value: val.value
               });
+            }}
+          />
+        </div>
+        <div className="grid gap-6 grid-cols-3">
+          <Input
+            title="Background"
+            name="background"
+            value={value.background || ''}
+            onChange={(val) => {
+              handler?.modifyObject(value, { key: 'background', value: val });
+            }}
+          />
+          <Input
+            title="Border Radius"
+            name="borderRadius"
+            value={value.borderRadius || ''}
+            onChange={(val) => {
+              handler?.modifyObject(value, { key: 'borderRadius', value: val });
+            }}
+          />
+          <Input
+            title="Box Shadow"
+            name="boxShadow"
+            value={value.boxShadow || ''}
+            onChange={(val) => {
+              handler?.modifyObject(value, { key: 'boxShadow', value: val });
             }}
           />
         </div>

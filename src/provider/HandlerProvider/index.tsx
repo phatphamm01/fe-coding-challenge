@@ -31,8 +31,11 @@ const HandlerProvider: React.FC<IChildrenProp & IHandlerProvider> = ({
   }, []);
 
   useEffect(() => {
+    console.log({ handler });
+
     if (!handler) return;
     const source = handler.storageHandler.get();
+
     if (!source) return;
 
     handler?.importDataStorage(source);

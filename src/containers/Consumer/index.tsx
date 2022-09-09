@@ -1,9 +1,10 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
 import { IChildrenProp } from '@/types/common';
 
-import WebBuilderObject from '@/core/web/objects';
+import { useRerender } from '@/hooks/useRerender';
 
 import { useHandler } from '@/provider/HandlerProvider';
 
@@ -18,16 +19,24 @@ const Container = styled.div`
 const ConsumerPage: React.FC<IChildrenProp> = () => {
   const handler = useHandler();
 
+  const forceUpdate = useRerender();
+
+  useEffect(() => {
+    handler?.eventManagerHandler.onMulti(['changed'], () => {
+      forceUpdate();
+    });
+
+    return () => {
+      handler?.eventManagerHandler.unsubscribeOfMulti(['changed'], () => {
+        forceUpdate();
+      });
+    };
+  }, [handler]);
+
   return (
     <ConsumerPageContainer>
       <Container>
-        {handler?.storageHandler?.get()?.map((value) => {
-          const Comp = WebBuilderObject[value.type].create({
-            data: value
-          });
-
-          return <Comp key={value.id} data={value} />;
-        })}
+        {handler?.utilsHandler.renderElement(handler?.getObjectsAsArray())}
       </Container>
     </ConsumerPageContainer>
   );

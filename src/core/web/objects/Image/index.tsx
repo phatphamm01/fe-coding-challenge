@@ -10,6 +10,7 @@ interface IImage {
 }
 
 const ImageBox = styled.div<{ css: string }>`
+  ${tw`overflow-hidden`}
   ${({ css }) => css}
 `;
 
@@ -28,7 +29,8 @@ const Image: React.FC<IImage> = ({
     width,
     objectFit,
     margin,
-    padding
+    padding,
+    borderRadius
   },
   ...rest
 }) => {
@@ -44,6 +46,9 @@ const Image: React.FC<IImage> = ({
     },
     margin: {
       default: margin
+    },
+    borderRadius: {
+      default: borderRadius
     }
   };
 

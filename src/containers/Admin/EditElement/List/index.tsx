@@ -18,8 +18,8 @@ const List: React.FC<IChildrenProp & IList> = ({ value }) => {
   const handler = useHandler();
 
   return (
-    <div className="grid gap-6">
-      <div key={value.id} className="grid gap-6 grid-cols-2">
+    <div key={value.id} className="grid gap-6">
+      <div className="grid gap-6 grid-cols-2">
         <div className="flex gap-2 items-end">
           <TextInputStyle
             title="Title"
