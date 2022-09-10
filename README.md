@@ -33,6 +33,12 @@
 - [x] Save
 - [x] Import file, Export file
 - [x] Redo, undo
+- [x] Shortcut
+  - [x] Ctrl C - Copy
+  - [x] Ctrl V - Paste
+  - [x] Ctrl Z - Undo
+  - [x] Ctrl Y - Redo
+  - [x] Delete - Remove
 - [x] Element
   - [x] Paragraph
   - [x] Button
@@ -44,6 +50,8 @@
   - [x] Basic information
   - [x] Style
 - [x] List page
+- [ ] Custom Component
+- [ ] Custom Layout
 
 ## Use Design Pattern
 
