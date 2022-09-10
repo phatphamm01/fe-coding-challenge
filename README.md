@@ -11,17 +11,17 @@
 <p align="center">
     <span>Infomation</span>
     <br>
-  <a href="https://fe-coding-challenge.vercel.app/">🎮 Link Demo</a> • <a href="https://phatphamm-cv.vercel.app/">💎 Link CV</a> • <a href="https://www.facebook.com/rinongusi/"> 💛 Link Facebook</a>
+  <a href="https://fe-coding-challenge-olive.vercel.app/">🎮 Link Demo</a> • <a href="https://phatphamm-cv.vercel.app/">💎 Link CV</a> • <a href="https://www.facebook.com/rinongusi/"> 💛 Link Facebook</a>
 </p>
 </p>
 
 <div align="center">
-  <a href="http://localhost:2804/admin/631aea49e14efdfaacfa14e0">
+  <a href="https://fe-coding-challenge-olive.vercel.app/admin/631aea49e14efdfaacfa14e0">
     <img src="https://phatphamm-cv.surge.sh/demo-1.png" alt="Logo" width="80%">
   </a>
   <h3 align="center"><b>Preview Edit</b></h3>
   <p align="center">--------------------------------------</p>
-  <a href="http://localhost:2804/consumner/631aea49e14efdfaacfa14e0">
+  <a href="https://fe-coding-challenge-olive.vercel.app/consumner/631aea49e14efdfaacfa14e0">
     <img src="https://phatphamm-cv.surge.sh/demo-2.png" alt="Logo" width="80%">
   </a>
    <h3 align="center"><b>Preview View</b></h3>
