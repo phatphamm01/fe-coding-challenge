@@ -36,7 +36,9 @@ const ConsumerPage: React.FC<IChildrenProp> = () => {
   return (
     <ConsumerPageContainer>
       <Container>
-        {handler?.utilsHandler.renderElement(handler?.getObjectsAsArray())}
+        {handler?.utilsHandler.renderElementByMain(
+          handler?.getObjectsAsArray()
+        )}
       </Container>
     </ConsumerPageContainer>
   );

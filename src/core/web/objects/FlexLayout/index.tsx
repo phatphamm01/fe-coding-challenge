@@ -91,7 +91,7 @@ const Layout: React.FC<ILayout> = ({
       css={genCss({ ...stylesLayout })}
       {...rest}
     >
-      {handler?.utilsHandler.renderElement(childrenObject, 'flexLayout')}
+      {handler?.utilsHandler.renderElementByLayout(childrenObject)}
     </LayoutContainer>
   );
 };

@@ -57,7 +57,9 @@ const Main: React.FC<IChildrenProp> = () => {
       </div>
 
       <Container id={handler?.id}>
-        {handler?.utilsHandler.renderElement(handler?.getObjectsAsArray())}
+        {handler?.utilsHandler.renderElementByMain(
+          handler?.getObjectsAsArray()
+        )}
       </Container>
     </MainContainer>
   );
