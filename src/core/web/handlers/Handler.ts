@@ -157,9 +157,20 @@ export class Handler implements HandlerOptions {
   };
 
   public remove = () => {
-    if (this.target?.id) {
-      this.removeById(this.target?.id);
+    if (!this.target?.id) return;
+
+    if (this.target.root) {
+      const root = this.getMapObjects().get(
+        this.target.root
+      ) as IObjectFlexLayout;
+      const newChildren = root.children.filter(
+        (value) => value !== this.target?.id
+      );
+      if (!root) return;
+      this.modifyObject(root, { key: 'children', value: newChildren });
     }
+
+    this.removeById(this.target?.id);
   };
 
   public removeById = (id: string) => {
@@ -245,36 +256,45 @@ export class Handler implements HandlerOptions {
   };
 
   public copy = () => {
-    const object = this.target;
-    if (!object) return;
+    const target = this.target;
+    if (!target) return;
 
-    this.copyToClipboard(JSON.stringify(object, null, '\t'));
-    this.clipboard = object;
+    this.copyToClipboard(JSON.stringify(target, null, '\t'));
+    this.clipboard = target;
   };
 
   public paste = () => {
-    const object = this.target;
-    console.log({ a: this.clipboard });
+    const target = this.target;
 
-    const newObject = { ...this.clipboard, id: randomId() };
+    const newObject = {
+      ...this.clipboard,
+      id: randomId()
+    } as IObjectWebBuilder;
 
-    if (object?.type === 'flexLayout') {
+    if (newObject?.type === 'flexLayout') {
       const children = (newObject as IObjectFlexLayout).children;
 
-      const newChildren = children.filter((value) => {
-        const obj = this.getMapObjects().get(value);
+      const newChildren = children
+        ?.map((value) => {
+          const obj = this.getMapObjects().get(value);
 
-        if (!obj) return false;
+          if (!obj) return;
 
-        const id = randomId();
-        this.add({ ...obj, id });
+          const id = randomId();
+          this.add({ ...obj, id, root: newObject.id });
 
-        return id;
-      });
-      console.log(newChildren);
+          return id;
+        })
+        .filter((value) => value);
 
       this.add({ ...newObject, children: newChildren });
-      return;
+    }
+
+    if (target?.type === 'flexLayout') {
+      this.modifyObject(target, {
+        key: 'children',
+        value: [...target.children, newObject.id]
+      });
     } else {
       this.add(newObject);
     }

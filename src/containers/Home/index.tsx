@@ -84,7 +84,7 @@ const HomePage: React.FC<IChildrenProp & IHomePage> = () => {
             </NavLink>
           </button>
           <button>
-            <NavLink to={`/consumer/${value._id}`}>
+            <NavLink to={`/admin/${value._id}`}>
               <EditIcon />
             </NavLink>
           </button>

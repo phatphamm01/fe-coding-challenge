@@ -29,7 +29,6 @@ class EventHandler {
     console.dir(e.target);
 
     if ((e?.target as any).nodeName === 'INPUT') return;
-    console.log('----');
 
     if (editable) {
       if (this.handler.shortcutHandler.isDelete(e)) {

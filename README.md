@@ -15,17 +15,35 @@
 </p>
 </p>
 
+<div align="center">
+  <a href="http://localhost:2804/admin/631aea49e14efdfaacfa14e0">
+    <img src="https://phatphamm-cv.surge.sh/demo-1.png" alt="Logo" width="80%">
+  </a>
+  <h3 align="center"><b>Preview Edit</b></h3>
+  <p align="center">--------------------------------------</p>
+  <a href="http://localhost:2804/consumner/631aea49e14efdfaacfa14e0">
+    <img src="https://phatphamm-cv.surge.sh/demo-2.png" alt="Logo" width="80%">
+  </a>
+   <h3 align="center"><b>Preview View</b></h3>
+  <p align="center">--------------------------------------</p>
+</div>
+
 ## Roadmap
 
 - [x] Save
 - [x] Import file, Export file
 - [x] Redo, undo
+- [x] Element
+  - [x] Paragraph
+  - [x] Button
+  - [x] Image
+  - [x] List
+  - [x] Flex Layout
+  - [ ] Grid layout
 - [x] Edit Element
   - [x] Basic information
-  - [ ] Style
-- [ ] List page
-- [ ] Grid layout
-- [ ] Flex layout
+  - [x] Style
+- [x] List page
 
 ## How To Use
 

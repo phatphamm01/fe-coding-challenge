@@ -24,7 +24,6 @@ const HandlerProvider: React.FC<IChildrenProp & IHandlerProvider> = ({
 
   useEffect(() => {
     handleGetDataAPI();
-    console.log('test');
 
     return () => {
       handler?.destroy();
@@ -42,7 +41,7 @@ const HandlerProvider: React.FC<IChildrenProp & IHandlerProvider> = ({
     }
 
     const handlerInit = new Handler({
-      id: page.data._id,
+      id: pageId,
       ...options
     });
 
