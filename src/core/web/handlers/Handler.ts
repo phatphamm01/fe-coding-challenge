@@ -323,19 +323,22 @@ export class Handler implements HandlerOptions {
 
       if (!clipboard) return;
 
+      const target = this.target;
+      if (target?.type === 'flexLayout') {
+        clipboard[0].root = target?.id;
+      } else {
+        delete clipboard[0].root;
+      }
+
       clipboard.forEach((value) => {
         this.add(value);
       });
 
-      const target = this.target;
       if (target?.type === 'flexLayout') {
         this.modifyObject(target, {
           key: 'children',
           value: [...target.children, clipboard[0].id]
         });
-        clipboard[0].root = target?.id;
-      } else {
-        delete clipboard[0].root;
       }
 
       this.eventManagerHandler.emit('paste', clipboard);
