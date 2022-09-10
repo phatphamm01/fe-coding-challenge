@@ -50,8 +50,6 @@ const Button: React.FC<IButton> = ({
       css={genCss({ ...style, ...styles })}
       {...(rest as any)}
       onClick={(e) => {
-        console.log({ onClick });
-
         if (onClick) {
           onClick(e);
         } else {

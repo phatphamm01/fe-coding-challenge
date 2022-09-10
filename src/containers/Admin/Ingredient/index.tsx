@@ -14,7 +14,7 @@ import { useDraggingHandler } from '@/provider/DraggingProvider';
 import { useHandler } from '@/provider/HandlerProvider';
 
 const IngredientContainer = styled.div`
-  ${tw`h-[inherit] w-48 border-r overflow-y-auto`}
+  ${tw`h-[inherit] w-48 border-r overflow-y-auto flex-shrink-0`}
 `;
 
 const IngredientList = styled.ul`

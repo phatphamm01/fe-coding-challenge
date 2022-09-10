@@ -45,7 +45,7 @@ export class Handler implements HandlerOptions {
   public editable?: boolean;
   public keyEvent: KeyEvent = defaults.keyEvent;
 
-  private clipboard: any = null;
+  private clipboard: IObjectWebBuilder[] = [];
 
   public onAdd?: (object: IObjectWebBuilder) => void;
   public onClick?: (
@@ -255,48 +255,92 @@ export class Handler implements HandlerOptions {
     document.body.removeChild(textarea);
   };
 
-  public copy = () => {
-    const target = this.target;
-    if (!target) return;
+  private copyDeep = (obj: IObjectWebBuilder) => {
+    let children: IObjectWebBuilder[] = [];
+    let newObj = { ...obj } as IObjectWebBuilder;
 
-    this.copyToClipboard(JSON.stringify(target, null, '\t'));
-    this.clipboard = target;
-  };
-
-  public paste = () => {
-    const target = this.target;
-
-    const newObject = {
-      ...this.clipboard,
-      id: randomId()
-    } as IObjectWebBuilder;
-
-    if (newObject?.type === 'flexLayout') {
-      const children = (newObject as IObjectFlexLayout).children;
-
-      const newChildren = children
-        ?.map((value) => {
-          const obj = this.getMapObjects().get(value);
-
-          if (!obj) return;
-
-          const id = randomId();
-          this.add({ ...obj, id, root: newObject.id });
-
-          return id;
-        })
-        .filter((value) => value);
-
-      this.add({ ...newObject, children: newChildren });
+    if (newObj.children) {
+      children = newObj.children.reduce(
+        (result, value) => [
+          ...result,
+          ...this.copyDeep(this.getMapObjects().get(value) as IObjectWebBuilder)
+        ],
+        []
+      );
     }
 
-    if (target?.type === 'flexLayout') {
-      this.modifyObject(target, {
-        key: 'children',
-        value: [...target.children, newObject.id]
+    return [newObj, ...children];
+  };
+
+  private handleChangeId = (objs: IObjectWebBuilder[]) => {
+    const mapId = new Map();
+    const newObjs = objs.map((value) => {
+      const id = randomId();
+      mapId.set(value.id, id);
+
+      return { ...value, id: id };
+    });
+
+    const result = newObjs.map((object: IObjectWebBuilder) => {
+      let newValue = object;
+
+      if (newValue?.children) {
+        newValue = {
+          ...newValue,
+          children: newValue.children.map((id) => mapId.get(id))
+        };
+      }
+
+      if (newValue?.root) {
+        newValue = {
+          ...newValue,
+          root: mapId.get(newValue.root)
+        };
+      }
+
+      return newValue;
+    });
+
+    return result;
+  };
+
+  public copy = () => {
+    const target = this.target;
+
+    if (!target) return;
+
+    this.copyToClipboard(JSON.stringify(this.copyDeep(target), null, '\t'));
+    this.clipboard = this.copyDeep(target);
+  };
+
+  public paste = async () => {
+    try {
+      const clipboard = this.handleChangeId(
+        this.clipboard.length > 0
+          ? this.clipboard
+          : JSON.parse(await navigator.clipboard.readText())
+      );
+
+      if (!clipboard) return;
+
+      clipboard.forEach((value) => {
+        this.add(value);
       });
-    } else {
-      this.add(newObject);
+
+      const target = this.target;
+      if (target?.type === 'flexLayout') {
+        this.modifyObject(target, {
+          key: 'children',
+          value: [...target.children, clipboard[0].id]
+        });
+        clipboard[0].root = target?.id;
+      } else {
+        delete clipboard[0].root;
+      }
+
+      this.eventManagerHandler.emit('paste', clipboard);
+    } catch (error) {
+      console.error(error);
     }
   };
 

@@ -26,7 +26,6 @@ class EventHandler {
 
   public keydown = (e: KeyboardEvent) => {
     const { keyEvent, editable } = this.handler;
-    console.dir(e.target);
 
     if ((e?.target as any).nodeName === 'INPUT') return;
 
