@@ -337,7 +337,7 @@ export class Handler implements HandlerOptions {
       if (target?.type === 'flexLayout') {
         this.modifyObject(target, {
           key: 'children',
-          value: [...target.children.push(clipboard[0].id)]
+          value: [...target.children, clipboard[0].id]
         });
       }
 
