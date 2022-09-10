@@ -20,19 +20,22 @@ export class UtilsHandler {
         data: value
       });
 
+      const editable = this.handler.editable && {
+        onClick: (event) => {
+          if (this.handler.editable) {
+            event.stopPropagation();
+
+            this.handler?.onSelected?.(value);
+          }
+        }
+      };
+
       return (
         <Comp
+          {...editable}
           style={{
             outline:
               this.handler.target?.id === value.id ? '1px solid blue' : ''
-          }}
-          onClick={(event) => {
-            if (this.handler.editable) {
-              event.stopPropagation();
-              // (event as any).cancelBubble = true;
-
-              this.handler?.onSelected?.(value);
-            }
           }}
           key={value.id}
           data={value}
@@ -47,19 +50,22 @@ export class UtilsHandler {
         data: value
       });
 
+      const editable = this.handler.editable && {
+        onClick: (event) => {
+          if (this.handler.editable) {
+            event.stopPropagation();
+
+            this.handler?.onSelected?.(value);
+          }
+        }
+      };
+
       return (
         <Comp
+          {...editable}
           style={{
             outline:
               this.handler.target?.id === value.id ? '1px solid blue' : ''
-          }}
-          onClick={(event) => {
-            if (this.handler.editable) {
-              event.stopPropagation();
-              // (event as any).cancelBubble = true;
-
-              this.handler?.onSelected?.(value);
-            }
           }}
           key={value.id}
           data={value}
